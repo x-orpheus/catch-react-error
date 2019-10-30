@@ -1,0 +1,11 @@
+app/proxy*
+coverage
+dist
+build
+scripts
+fntest
+mocks
+node_modules
+spm_modules
+test/fixtures
+**/iconfont/*.js
