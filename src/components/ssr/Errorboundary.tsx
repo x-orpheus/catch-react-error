@@ -31,9 +31,8 @@ export class SSRErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorB
         type: 'client'
     }
 
-    readonly state = {
+    readonly state: Readonly<ErrorBoundaryState> = {
         hasError: false,
-        err: new Error()
     };
 
     static getDerivedStateFromError(err: Error) {

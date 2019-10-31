@@ -9,9 +9,8 @@ export class CSRErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorB
         type: 'client'
     }
 
-    readonly state = {
-        hasError: false,
-        err: new Error(),
+    readonly state: Readonly<ErrorBoundaryState> = {
+        hasError: false
     };
 
     static getDerivedStateFromError(err: Error) {
