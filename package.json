@@ -42,6 +42,7 @@
         "@babel/preset-react": "^7.6.3",
         "@commitlint/cli": "^8.2.0",
         "@commitlint/config-conventional": "^8.2.0",
+        "@typescript-eslint/parser": "^2.6.0",
         "commitlint": "^8.2.0",
         "eslint": "^6.6.0",
         "eslint-plugin-flowtype": "^4.3.0",

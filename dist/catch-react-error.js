@@ -11,6 +11,10 @@ var _Errorboundary = _interopRequireDefault(
     require('./components/csr/Errorboundary')
 );
 
+var _Errorboundary2 = _interopRequireDefault(
+    require('./components/ssr/Errorboundary')
+);
+
 function _interopRequireDefault(obj) {
     return obj && obj.__esModule ? obj : { default: obj };
 }
@@ -57,22 +61,34 @@ function _interopRequireWildcard(obj) {
 }
 
 var EmptyFunc = function EmptyFunc() {
-    return 'react component must render something';
+    return 'React component must render something';
 };
 
 var FallbackFunc = function FallbackFunc() {
-    return React.createElement('div', null, 'loading');
+    return React.createElement('div', null, 'Something went Wrong');
 };
 
-var catchreacterror = function catchreacterror() {
-    var type =
-        arguments.length > 0 && arguments[0] !== undefined
-            ? arguments[0]
-            : 'client';
-    var Boundary =
-        arguments.length > 1 && arguments[1] !== undefined
-            ? arguments[1]
-            : _Errorboundary['default'];
+var catchreacterror = function catchreacterror(type, Boundary) {
+    if (type !== 'client' && type !== 'server') {
+        type = 'client';
+        console.error("catchreacterror: type must be 'client' or 'server'");
+    }
+
+    if (
+        Boundary &&
+        !React.Component.prototype.isPrototypeOf(Boundary.prototype)
+    ) {
+        console.error(
+            "catchreacterror: ErrorBoundary must be 'React Class Component'"
+        );
+    }
+
+    if (!Boundary) {
+        type === 'client'
+            ? (Boundary = _Errorboundary['default'])
+            : (Boundary = _Errorboundary2['default']);
+    }
+
     return function(traget, key, descriptor) {
         var originalRender = traget.render || EmptyFunc;
         var fallback = traget.fallback || FallbackFunc;

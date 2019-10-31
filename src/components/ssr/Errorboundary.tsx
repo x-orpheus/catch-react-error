@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 
-import { ErrorBoundaryProps, ErrorBoundaryState } from '../../interface'
+import { ErrorBoundaryProps, ErrorBoundaryState } from '../../interface/propsInterface'
 
 export function serverMarkup(props: ErrorBoundaryProps): React.ReactNode {
     const element = props.children;

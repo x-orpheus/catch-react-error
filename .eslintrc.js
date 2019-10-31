@@ -1,11 +1,14 @@
 module.exports = {
-    env: {
-        es6: true,
+    parser: '@typescript-eslint/parser',
+    parserOptions: {
+        ecmaVersion: 6,
+        sourceType: 'module',
+        ecmaFeatures: {
+            modules: true,
+            jsx: true,
+        },
+        useJSXTextNode: true,
+        project: './tsconfig.json',
+        extraFileExtensions: ['.ts', '.tsx'],
     },
-    extends: 'eslint:recommended',
-    rules: {
-        indent: ['warn', 4, { SwitchCase: 0 }],
-        'no-script-url': 'off',
-    },
-    plugins: ['react'],
 };

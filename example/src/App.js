@@ -1,5 +1,6 @@
 import React from 'react';
 import catchreacterror from './dist';
+import ErrorBoundary from './components/ErrorBoundary';
 
 import logo from './logo.svg';
 import './App.css';
@@ -18,11 +19,13 @@ function App() {
 }
 
 class Test extends React.Component {
-    @catchreacterror()
+    @catchreacterror('asd')
     render() {
         return <Button text="click me" />;
     }
 }
+
+console.log(React.Component.prototype.isPrototypeOf(Test.prototype));
 
 class Button extends React.Component {
     render() {
@@ -31,7 +34,7 @@ class Button extends React.Component {
 
     componentDidMount() {
         const emptyObj = {};
-        //console.log(emptyObj.a.b)
+        console.log(emptyObj.a.b);
     }
 }
 

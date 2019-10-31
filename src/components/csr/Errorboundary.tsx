@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { ErrorBoundaryProps, ErrorBoundaryState } from '../../interface'
+import { ErrorBoundaryProps, ErrorBoundaryState } from '../../interface/propsInterface'
 
 class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
 
