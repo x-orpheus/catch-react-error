@@ -5,7 +5,7 @@ Object.defineProperty(exports, '__esModule', {
 });
 exports.serverMarkup = serverMarkup;
 exports.is_server = is_server;
-exports['default'] = void 0;
+exports['default'] = exports.SSRErrorBoundary = void 0;
 
 var React = _interopRequireWildcard(require('react'));
 
@@ -172,17 +172,17 @@ function is_server() {
     return !(typeof window !== 'undefined' && window.document);
 }
 
-var ErrorBoundary =
+var SSRErrorBoundary =
     /*#__PURE__*/
     (function(_React$Component) {
-        _inherits(ErrorBoundary, _React$Component);
+        _inherits(SSRErrorBoundary, _React$Component);
 
-        function ErrorBoundary() {
+        function SSRErrorBoundary() {
             var _getPrototypeOf2;
 
             var _this;
 
-            _classCallCheck(this, ErrorBoundary);
+            _classCallCheck(this, SSRErrorBoundary);
 
             for (
                 var _len = arguments.length, args = new Array(_len), _key = 0;
@@ -194,21 +194,21 @@ var ErrorBoundary =
 
             _this = _possibleConstructorReturn(
                 this,
-                (_getPrototypeOf2 = _getPrototypeOf(ErrorBoundary)).call.apply(
-                    _getPrototypeOf2,
-                    [this].concat(args)
-                )
+                (_getPrototypeOf2 = _getPrototypeOf(
+                    SSRErrorBoundary
+                )).call.apply(_getPrototypeOf2, [this].concat(args))
             );
 
             _defineProperty(_assertThisInitialized(_this), 'state', {
                 hasError: false,
+                err: new Error(),
             });
 
             return _this;
         }
 
         _createClass(
-            ErrorBoundary,
+            SSRErrorBoundary,
             [
                 {
                     key: 'componentDidCatch',
@@ -224,7 +224,7 @@ var ErrorBoundary =
                         }
 
                         if (this.state.hasError) {
-                            return React.createElement('div', null, 'loading');
+                            return this.props.fallback(this.state.err);
                         }
 
                         return this.props.children;
@@ -237,21 +237,24 @@ var ErrorBoundary =
                     value: function getDerivedStateFromError(err) {
                         return {
                             hasError: true,
+                            err: err,
                         };
                     },
                 },
             ]
         );
 
-        return ErrorBoundary;
+        return SSRErrorBoundary;
     })(React.Component);
 
-_defineProperty(ErrorBoundary, 'defaultProps', {
+exports.SSRErrorBoundary = SSRErrorBoundary;
+
+_defineProperty(SSRErrorBoundary, 'defaultProps', {
     fallback: function fallback() {
-        return React.createElement('div', null, 'loading');
+        return React.createElement('div', null, 'Something went Wrong');
     },
     type: 'client',
 });
 
-var _default = ErrorBoundary;
+var _default = SSRErrorBoundary;
 exports['default'] = _default;

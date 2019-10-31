@@ -1,11 +1,9 @@
 import React from 'react';
-import catchreacterror from './dist';
+import catchreacterror, { CSRErrorBoundary, SSRErrorBoundary } from './dist';
 import ErrorBoundary from './components/ErrorBoundary';
 
 import logo from './logo.svg';
 import './App.css';
-
-console.log(catchreacterror);
 
 function App() {
     return (
@@ -19,7 +17,11 @@ function App() {
 }
 
 class Test extends React.Component {
-    @catchreacterror('asd')
+    fallback = err => {
+        return <div>自定义错误提示信息</div>;
+    };
+
+    @catchreacterror('client', CSRErrorBoundary)
     render() {
         return <Button text="click me" />;
     }

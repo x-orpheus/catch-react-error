@@ -68,10 +68,18 @@ var FallbackFunc = function FallbackFunc() {
     return React.createElement('div', null, 'Something went Wrong');
 };
 
-var catchreacterror = function catchreacterror(type, Boundary) {
+var catchreacterror = function catchreacterror() {
+    var type =
+        arguments.length > 0 && arguments[0] !== undefined
+            ? arguments[0]
+            : 'client';
+    var Boundary = arguments.length > 1 ? arguments[1] : undefined;
+
     if (type !== 'client' && type !== 'server') {
         type = 'client';
-        console.error("catchreacterror: type must be 'client' or 'server'");
+        console.error(
+            "Catch-React-Error: type must be 'client' or 'server',default is 'client'"
+        );
     }
 
     if (
@@ -79,7 +87,7 @@ var catchreacterror = function catchreacterror(type, Boundary) {
         !React.Component.prototype.isPrototypeOf(Boundary.prototype)
     ) {
         console.error(
-            "catchreacterror: ErrorBoundary must be 'React Class Component'"
+            "Catch-React-Error: The <ErrorBoundary /> component doesn't extend React.Component. This is likely to cause errors. Change ErrorBoundary to extend React.Component instead."
         );
     }
 
