@@ -54,7 +54,7 @@ class Test extends React.Component {
 
 第二个参数为`ErrorBoundary`组件，默认为使用者提供了两个模版分别为客户度渲染`CSRErrorBoundary`,服务端渲染`SSRErrorBoundary`;用户可以完全不使用模版，而自定义`ErrorBounday`组件，传递给`catchreacterror`函数
 
-#### 自定义错误信息
+#### 5.添加自定义错误信息
 
 如果使用`ErrorBounday`模版,并针对不同的组件想要个性化的错误提示：则可以在`React Component`中添加`fallback`函数，该函数返回值为`自定义的展示内容即可`，例如：
 

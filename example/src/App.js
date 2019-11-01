@@ -27,8 +27,6 @@ class Test extends React.Component {
     }
 }
 
-console.log(React.Component.prototype.isPrototypeOf(Test.prototype));
-
 class Button extends React.Component {
     render() {
         return <button>click me</button>;
