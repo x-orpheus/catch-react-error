@@ -1,8 +1,9 @@
 {
     "name": "@music/catch-react-error",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "description": "使用ES7的Decorator配合React ErrorBoundary捕获React生命周期期间发生的错误",
-    "main": "./dist/index.js",
+    "main": "dist/index.js",
+    "typings": "dist/index.d.ts",
     "scripts": {
         "test": "jest",
         "build": "npx babel src --out-dir dist --extensions '.ts,.tsx'"
