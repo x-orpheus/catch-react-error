@@ -52,7 +52,9 @@ class Test extends React.Component {
 
 第一个为字符串('client or 'server'，可以不传默认为'client'),用来标示是客户端渲染还是服务渲染；
 
-第二个参数为`ErrorBoundary`组件，默认为使用者提供了两个模版分别为客户度渲染`CSRErrorBoundary`,服务端渲染`SSRErrorBoundary`;用户可以完全不使用模版，而自定义`ErrorBounday`组件，传递给`catchreacterror`函数
+第二个参数为`ErrorBoundary`组件，默认为使用者提供了两个模版分别为客户度渲染`CSRErrorBoundary`,服务端渲染`SSRErrorBoundary`;
+
+用户可以完全不使用模版，而自定义`ErrorBounday`组件，传递给`catchreacterror`函数
 
 #### 5.添加自定义错误信息
 
@@ -64,14 +66,14 @@ class Test extends React.Component {
         return <div>自定义错误提示信息</div>;
     };
 
-    @catchreacterror(undefined, CSRErrorBoundary)
+    @catchreacterror('client', CSRErrorBoundary)
     render() {
         return <Button text="click me" />;
     }
 }
 ```
 
-> `fallback`函数的参数,为 Error 对象实例，可以获取具体的错误信息,用来自定义错误提示，或用于上报错误等
+`fallback`函数的参数,为 Error 对象实例，可以获取具体的错误信息,用来自定义错误提示，或用于上报错误等
 
 如果不提供自定义的`fallback`函数则会使用默认模版中的错误信息展示，即：`<div>Something went Wrong</div>`
 
