@@ -3,6 +3,7 @@
         "outDir": "./dist/",
         "sourceMap": true,
         "noImplicitAny": true,
+        "noEmit": true,
         "experimentalDecorators": true,
         "declaration": true,
         "module": "es2015",
