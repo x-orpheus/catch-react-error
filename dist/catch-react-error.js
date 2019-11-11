@@ -8,11 +8,7 @@ exports['default'] = void 0;
 var React = _interopRequireWildcard(require('react'));
 
 var _Errorboundary = _interopRequireDefault(
-    require('./components/csr/Errorboundary')
-);
-
-var _Errorboundary2 = _interopRequireDefault(
-    require('./components/ssr/Errorboundary')
+    require('./components/Errorboundary')
 );
 
 function _interopRequireDefault(obj) {
@@ -61,40 +57,28 @@ function _interopRequireWildcard(obj) {
 }
 
 var EmptyFunc = function EmptyFunc() {
-    return 'React component must render something';
+    return 'React Component must render something';
 };
 
 var FallbackFunc = function FallbackFunc() {
-    return React.createElement('div', null, 'Something went Wrong');
+    return React.createElement('div', null, 'Loading');
 };
 
 var catchreacterror = function catchreacterror() {
-    var type =
+    var Boundary =
         arguments.length > 0 && arguments[0] !== undefined
             ? arguments[0]
-            : 'client';
-    var Boundary = arguments.length > 1 ? arguments[1] : undefined;
-
-    if (type !== 'client' && type !== 'server') {
-        type = 'client';
-        console.error(
-            "Catch-React-Error: type must be 'client' or 'server',default is 'client'"
-        );
-    }
+            : _Errorboundary['default'];
 
     if (
         Boundary &&
         !React.Component.prototype.isPrototypeOf(Boundary.prototype)
     ) {
-        console.error(
-            "Catch-React-Error: The <ErrorBoundary /> component doesn't extend React.Component. This is likely to cause errors. Change ErrorBoundary to extend React.Component instead."
+        console.warn(
+            "Catch-React-Error: The <ErrorBoundary /> component doesn't extend React.Component.  ErrorBoundary must extends React.Component"
         );
-    }
-
-    if (!Boundary) {
-        type === 'client'
-            ? (Boundary = _Errorboundary['default'])
-            : (Boundary = _Errorboundary2['default']);
+        Boundary = _Errorboundary['default'];
+        return;
     }
 
     return function(traget, key, descriptor) {
@@ -105,7 +89,6 @@ var catchreacterror = function catchreacterror() {
             return React.createElement(
                 Boundary,
                 {
-                    type: type,
                     fallback: fallback,
                 },
                 originalRender()

@@ -3,9 +3,13 @@
 Object.defineProperty(exports, '__esModule', {
     value: true,
 });
-exports['default'] = exports.CSRErrorBoundary = void 0;
+exports.serverMarkup = serverMarkup;
+exports.is_server = is_server;
+exports['default'] = exports.IsomorphicErrorBoundary = void 0;
 
 var React = _interopRequireWildcard(require('react'));
+
+var _server = require('react-dom/server');
 
 function _getRequireWildcardCache() {
     if (typeof WeakMap !== 'function') return null;
@@ -149,17 +153,39 @@ function _defineProperty(obj, key, value) {
     return obj;
 }
 
-var CSRErrorBoundary =
+function serverMarkup(props) {
+    var element = props.children;
+
+    try {
+        var staticMarkup = (0, _server.renderToStaticMarkup)(element); // return (
+        //     <div
+        //         dangerouslySetInnerHTML={{
+        //             __html: staticMarkup,
+        //         }}
+        //     />
+        // );
+
+        return element;
+    } catch (e) {
+        return props.fallback(e);
+    }
+}
+
+function is_server() {
+    return !(typeof window !== 'undefined' && window.document);
+}
+
+var IsomorphicErrorBoundary =
     /*#__PURE__*/
     (function(_React$Component) {
-        _inherits(CSRErrorBoundary, _React$Component);
+        _inherits(IsomorphicErrorBoundary, _React$Component);
 
-        function CSRErrorBoundary() {
+        function IsomorphicErrorBoundary() {
             var _getPrototypeOf2;
 
             var _this;
 
-            _classCallCheck(this, CSRErrorBoundary);
+            _classCallCheck(this, IsomorphicErrorBoundary);
 
             for (
                 var _len = arguments.length, args = new Array(_len), _key = 0;
@@ -172,20 +198,19 @@ var CSRErrorBoundary =
             _this = _possibleConstructorReturn(
                 this,
                 (_getPrototypeOf2 = _getPrototypeOf(
-                    CSRErrorBoundary
+                    IsomorphicErrorBoundary
                 )).call.apply(_getPrototypeOf2, [this].concat(args))
             );
 
             _defineProperty(_assertThisInitialized(_this), 'state', {
                 hasError: false,
-                err: new Error(),
             });
 
             return _this;
         }
 
         _createClass(
-            CSRErrorBoundary,
+            IsomorphicErrorBoundary,
             [
                 {
                     key: 'componentDidCatch',
@@ -196,6 +221,10 @@ var CSRErrorBoundary =
                 {
                     key: 'render',
                     value: function render() {
+                        if (is_server()) {
+                            return serverMarkup(this.props);
+                        }
+
                         if (this.state.hasError) {
                             return this.props.fallback(this.state.err);
                         }
@@ -217,17 +246,9 @@ var CSRErrorBoundary =
             ]
         );
 
-        return CSRErrorBoundary;
+        return IsomorphicErrorBoundary;
     })(React.Component);
 
-exports.CSRErrorBoundary = CSRErrorBoundary;
-
-_defineProperty(CSRErrorBoundary, 'defaultProps', {
-    fallback: function fallback() {
-        return React.createElement('div', null, 'Something went Wrong');
-    },
-    type: 'client',
-});
-
-var _default = CSRErrorBoundary;
+exports.IsomorphicErrorBoundary = IsomorphicErrorBoundary;
+var _default = IsomorphicErrorBoundary;
 exports['default'] = _default;
