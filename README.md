@@ -1,5 +1,7 @@
 ### 简介
 
+[English](xxx.README-en.md)
+
 使用 ES7 的`Decorator`配合`React ErrorBoundary`捕获 React 生命周期期间发生的错误
 
 ### 使用方式
@@ -13,8 +15,9 @@ nenpm install @music/catch-react-error
 #### 2.安装 ES7 Decorator babel plugin
 
 ```sh
-yarn add @babel/plugin-proposal-decorators --dev
-yarn add @babel/plugin-proposal-class-properties --dev
+npm install --save-dev @babel/plugin-proposal-decorators
+npm install --save-dev @babel/plugin-proposal-class-properties
+
 ```
 
 添加 babel plugin
@@ -31,17 +34,14 @@ yarn add @babel/plugin-proposal-class-properties --dev
 #### 3.导入 catch-react-error
 
 ```jsx
-import catchreacterror, {
-    CSRErrorBoundary,
-    SSRErrorBoundary,
-} from '@music/catch-react-error';
+import catchreacterror from '@music/catch-react-error';
 ```
 
 #### 4.使用@catchreacterror decorator
 
 ```jsx
 class Test extends React.Component {
-    @catchreacterror('client', CSRErrorBoundary)
+    @catchreacterror('i')
     render() {
         return <Button text="click me" />;
     }
@@ -50,13 +50,11 @@ class Test extends React.Component {
 
 `catchreacterror`函数接受两个参数；
 
-第一个为字符串('client or 'server'，可以不传默认为'client'),用来标示是客户端渲染还是服务渲染；
+1. 第一个为字符串('c or 'i'，c 代表 client,i 代表 isomporphic),用来标示是客户端渲染还是同构直出渲染；客户端渲染会用 React 16 的[Error Boundary](https://reactjs.org/blog/2017/07/26/error-handling-in-react-16.html)的相关函数来处理来处理，主要是 componentDidCatch。而同构直出则会用`try catch`来处理服务端，Eorror Boundary 函数处理客户端。
 
-第二个参数为`ErrorBoundary`组件，默认为使用者提供了两个模版分别为客户度渲染`CSRErrorBoundary`,服务端渲染`SSRErrorBoundary`;
+2. 第二个参数为`customErrorBoundary`组件。可以添加自己定义 error boundary 组件，具体用法看下面。
 
-用户可以完全不使用模版，而自定义`ErrorBounday`组件，传递给`catchreacterror`函数
-
-#### 5.添加自定义错误信息
+#### 5.添加自定义错误处理组件
 
 如果使用`ErrorBounday`模版,并针对不同的组件想要个性化的错误提示：则可以在`React Component`中添加`fallback`函数，该函数返回值为`自定义的展示内容即可`，例如：
 
@@ -66,7 +64,7 @@ class Test extends React.Component {
         return <div>自定义错误提示信息</div>;
     };
 
-    @catchreacterror('client', CSRErrorBoundary)
+    @catchreacterror('c')
     render() {
         return <Button text="click me" />;
     }

@@ -5,8 +5,8 @@ import { ErrorBoundaryProps, ErrorBoundaryState } from '../../interface/propsInt
 export class CSRErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
 
     static defaultProps = {
-        fallback: () => <div>Something went Wrong</div>,
-        type: 'client'
+        fallback: () => <div>Loading</div>,
+        type: 'c'
     }
 
     readonly state: Readonly<ErrorBoundaryState> = {

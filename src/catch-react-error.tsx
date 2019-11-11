@@ -1,6 +1,6 @@
 import * as React from 'react';
 import CSRErrorBoundary from './components/csr/Errorboundary'
-import SSRErrorBoundary from './components/ssr/Errorboundary'
+import IsomorphicErrorBoundary from './components/iso/Errorboundary'
 import { ErrorBoundaryProps } from './interface/propsInterface'
 
 interface Component extends React.Component {
@@ -8,22 +8,24 @@ interface Component extends React.Component {
 }
 
 const EmptyFunc = (): React.ReactNode => { return 'React component must render something' }
-const FallbackFunc = (): React.ReactNode => <div>Something went Wrong</div>
+const FallbackFunc = (): React.ReactNode => <div>Loading</div>
 
 const catchreacterror =
-    (type: string = 'client', Boundary: React.ComponentType<ErrorBoundaryProps>) => {
+    (type: string = 'c', Boundary: React.ComponentType<ErrorBoundaryProps>) => {
 
-        if (type !== 'client' && type !== 'server') {
-            type = 'client'
-            console.error("Catch-React-Error: type must be 'client' or 'server',default is 'client'")
+
+        if (type !== 'c' && type !== 'i') {
+            type = 'i'
+            console.warn("The input parameter is wrong, so we will use the default isomporhpic error boundary")
         }
 
         if (Boundary && !React.Component.prototype.isPrototypeOf(Boundary.prototype)) {
-            console.error("Catch-React-Error: The <ErrorBoundary /> component doesn't extend React.Component. This is likely to cause errors. Change ErrorBoundary to extend React.Component instead.")
+            console.warn("Catch-React-Error: The <ErrorBoundary /> component doesn't extend React.Component.  ErrorBoundary must extends React.Component");
+            return;
         }
 
         if (!Boundary) {
-            type === 'client' ? Boundary = CSRErrorBoundary : Boundary = SSRErrorBoundary
+            type === 'c' ? Boundary = CSRErrorBoundary : IsomorphicErrorBoundary
         }
 
         return (traget: Component, key: string, descriptor: PropertyDescriptor) => {

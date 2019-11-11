@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { renderToStaticMarkup } from 'react-dom/server';
+// import { renderToStaticMarkup } from 'react-dom/server';
 
 import { ErrorBoundaryProps, ErrorBoundaryState } from '../../interface/propsInterface'
 
@@ -7,16 +7,10 @@ export function serverMarkup(props: ErrorBoundaryProps): React.ReactNode {
     const element = props.children;
 
     try {
-        const staticMarkup = renderToStaticMarkup(element as React.ReactElement);
-        return (
-            <div
-                dangerouslySetInnerHTML={{
-                    __html: staticMarkup,
-                }}
-            />
-        );
+        // const staticMarkup = renderToStaticMarkup(element as React.ReactElement);
+        return element;
     } catch (e) {
-        return props.fallback()
+        return props.fallback(e)
     }
 }
 
@@ -24,11 +18,11 @@ export function is_server(): boolean {
     return !(typeof window !== 'undefined' && window.document);
 }
 
-export class SSRErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
+export class IsomorphicErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
 
     static defaultProps = {
-        fallback: () => <div>Something went Wrong</div>,
-        type: 'client'
+        fallback: () => <div>Loading</div>,
+        type: 'i'
     }
 
     readonly state: Readonly<ErrorBoundaryState> = {
@@ -58,4 +52,4 @@ export class SSRErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorB
         return this.props.children;
     }
 }
-export default SSRErrorBoundary;
+export default IsomorphicErrorBoundary;
