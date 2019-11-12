@@ -65,13 +65,12 @@ class CustomErrorBoundary extends React.Component {
 
     componentDidCatch(error, info) {
         this.setState({ hasError: true });
-        logErrorToMyService(error, info);
     }
 
     is_server() {
         return !(typeof window !== 'undefined' && window.document);
     }
-    serverMarkup(props) {
+    handleServer(props) {
         const element = props.children;
 
         try {
@@ -83,7 +82,7 @@ class CustomErrorBoundary extends React.Component {
 
     render() {
         if (this.is_server()) {
-            return this.serverMarkup(this.props);
+            return this.handleServer(this.props);
         }
         if (this.state.hasError) {
             return <h1>Something went wrong.</h1>;
