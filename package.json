@@ -18,6 +18,10 @@
         "decorator"
     ],
     "author": "zwd",
+    "contributors": [
+        "zwd <zwd321081@gmail.com>",
+        "zxt <hzzhaoxiangtao@corp.netease.com>"
+    ],
     "license": "ISC",
     "husky": {
         "hooks": {
