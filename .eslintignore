@@ -11,3 +11,4 @@ test/fixtures
 **/iconfont/*.js
 example-client
 example-server
+jest.config.js
