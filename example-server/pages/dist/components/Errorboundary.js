@@ -157,15 +157,12 @@ function serverMarkup(props) {
     var element = props.children;
 
     try {
-        var staticMarkup = (0, _server.renderToStaticMarkup)(element); // return (
-        //     <div
-        //         dangerouslySetInnerHTML={{
-        //             __html: staticMarkup,
-        //         }}
-        //     />
-        // );
-
-        return element;
+        var staticMarkup = (0, _server.renderToStaticMarkup)(element);
+        return React.createElement('div', {
+            dangerouslySetInnerHTML: {
+                __html: staticMarkup,
+            },
+        });
     } catch (e) {
         return props.fallback(e);
     }

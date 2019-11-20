@@ -1,14 +1,23 @@
 import * as React from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { ErrorBoundaryProps, ErrorBoundaryState } from '../interface/propsInterface'
 
 export function serverMarkup(props: ErrorBoundaryProps): React.ReactNode {
     const element = props.children;
 
     try {
-        return element;
+        const staticMarkup = renderToStaticMarkup(element as React.ReactElement);
+        return (
+            <div
+                dangerouslySetInnerHTML={{
+                    __html: staticMarkup,
+                }}
+            />
+        );
     } catch (e) {
         return props.fallback(e)
     }
+
 }
 
 export function is_server(): boolean {

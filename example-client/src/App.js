@@ -13,27 +13,65 @@ function App() {
 }
 
 class Test extends React.Component {
-    // fallback() {
-    //     return <div>自定义错误提示信息</div>;
-    // };
-
-    @catchreacterror(IsomorphicErrorBoundary)
+    constructor() {
+        super();
+        this.state = {
+            foo: 1,
+        };
+        this.buttonRef = React.createRef();
+    }
+    fallback() {
+        return <div>Test Error</div>;
+    }
     render() {
-        return <Button text="click me" />;
+        const { foo } = this.state;
+        console.log(foo);
+        return (
+            <div>
+                <Button text="click me" ref={this.buttonRef} />
+                <Label list={['a', 'abc', null, 'abcd']} />
+            </div>
+        );
+    }
+
+    componentDidMount() {
+        console.log(this.buttonRef.current.hello());
     }
 }
-
+@catchreacterror(IsomorphicErrorBoundary)
 class Button extends React.Component {
+    fallback() {
+        return <div>Button Error FallBack</div>;
+    }
+
+    hello() {
+        console.log('hello');
+    }
+    handleClick() {
+        console.log('click me !');
+    }
+
     render() {
-        const emptyObj = {};
-        console.log(emptyObj.a.b);
-        return <button>click me</button>;
+        // const emptyObj = {};
+        // console.log(emptyObj.a.b);
+        return <button onClick={this.handleClick}>click me</button>;
     }
 
     componentDidMount() {
         const emptyObj = {};
-        console.log(emptyObj.a.b);
+        //console.log(emptyObj.a.b);
     }
 }
+
+const Label = ({ list }) => {
+    return list.map(x => <SafeContent x={x} kye={x} />);
+};
+
+const Content = ({ x }) => <div>{x.length}</div>;
+
+const SafeContent = catchreacterror(IsomorphicErrorBoundary)(
+    Content,
+    () => 'Content error fallback'
+);
 
 export default App;

@@ -1,5 +1,5 @@
 import React from 'react';
-import catchreacterror, { IsomorphicErrorBoundary } from '../dist';
+import catchreacterror, { IsomorphicErrorBoundary } from './dist';
 
 function App() {
     return (
@@ -13,27 +13,50 @@ function App() {
 }
 
 class Test extends React.Component {
+    constructor() {
+        super();
+        this.state = {
+            foo: 1,
+        };
+        this.buttonRef = React.createRef();
+    }
     fallback() {
-        return <div>自定义错误提示信息</div>;
+        return <div>Test Error</div>;
+    }
+    render() {
+        const { foo } = this.state;
+        console.log(foo);
+        return (
+            <div>
+                <Button text="click me" ref={this.buttonRef} />
+                <Label list={['a', 'abc', null, 'abcd']} />
+            </div>
+        );
     }
 
-    @catchreacterror(IsomorphicErrorBoundary)
-    render() {
-        return <Button text="click me" />;
+    componentDidMount() {
+        console.log(this.buttonRef);
     }
 }
-
+@catchreacterror()
 class Button extends React.Component {
+    fallback() {
+        return <div>Button Error FallBack</div>;
+    }
+
     render() {
         const emptyObj = {};
         console.log(emptyObj.a.b);
         return <button>click me</button>;
     }
-
-    // componentDidMount() {
-    //     const emptyObj = {};
-    //     console.log(emptyObj.a.b);
-    // }
 }
+
+const Label = ({ list }) => {
+    return list.map(x => <SafeContent x={x} kye={x} />);
+};
+
+const Content = ({ x }) => <div>{x.length}</div>;
+
+const SafeContent = catchreacterror(IsomorphicErrorBoundary)(Content);
 
 export default App;
