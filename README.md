@@ -41,38 +41,53 @@ import catchreacterror from '@music/catch-react-error';
 
 ```jsx
 class Test extends React.Component {
-    @catchreacterror('i')
+    @catchreacterror()
     render() {
         return <Button text="click me" />;
     }
 }
 ```
 
-`catchreacterror`函数接受两个参数；
+`catchreacterror`函数接受一个参数:
 
-1. 第一个为字符串('c or 'i'，c 代表 client,i 代表 isomporphic),用来标示是客户端渲染还是同构直出渲染；客户端渲染会用 React 16 的[Error Boundary](https://reactjs.org/blog/2017/07/26/error-handling-in-react-16.html)的相关函数来处理来处理，主要是 componentDidCatch。而同构直出则会用`try catch`来处理服务端，Eorror Boundary 函数处理客户端。
+自定义的`CustomErrorBoundary`组件。默认会用框架提供的`IsomorphicErrorBoundary`组件。其原理为：客户端渲染会用 React 16 的[Error Boundary](https://reactjs.org/blog/2017/07/26/error-handling-in-react-16.html)的相关函数来处理错误，服务端用`try catch`来捕获 render 的错误。
 
-2. 第二个参数为`customErrorBoundary`组件。可以添加自己定义 error boundary 组件，具体用法看下面。
+#### 5.如何编写 CustomErrorBoundary
 
-#### 5.添加自定义错误处理组件
+拷贝下面代码，修改成自己所需。
 
-如果使用`ErrorBounday`模版,并针对不同的组件想要个性化的错误提示：则可以在`React Component`中添加`fallback`函数，该函数返回值为`自定义的展示内容即可`，例如：
+```js
+class CustomErrorBoundary extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = { hasError: false };
+    }
 
-```jsx
-class Test extends React.Component {
-    fallback = err => {
-        return <div>自定义错误提示信息</div>;
-    };
+    componentDidCatch(error, info) {
+        this.setState({ hasError: true });
+    }
 
-    @catchreacterror('c')
+    is_server() {
+        return !(typeof window !== 'undefined' && window.document);
+    }
+    handleServer(props) {
+        const element = props.children;
+
+        try {
+            return element;
+        } catch (e) {
+            return 'Something went wrong';
+        }
+    }
+
     render() {
-        return <Button text="click me" />;
+        if (this.is_server()) {
+            return this.handleServer(this.props);
+        }
+        if (this.state.hasError) {
+            return <h1>Something went wrong.</h1>;
+        }
+        return this.props.children;
     }
 }
 ```
-
-`fallback`函数的参数,为 Error 对象实例，可以获取具体的错误信息,用来自定义错误提示，或用于上报错误等
-
-如果不提供自定义的`fallback`函数则会使用默认模版中的错误信息展示，即：`<div>Something went Wrong</div>`
-
-> 默认`fallback`函数为：`const FallbackFunc = (): React.ReactNode => <div>Something went Wrong</div>`

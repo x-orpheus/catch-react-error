@@ -18,6 +18,10 @@
         "decorator"
     ],
     "author": "zwd",
+    "contributors": [
+        "zwd <zwd321081@gmail.com>",
+        "zxt <hzzhaoxiangtao@corp.netease.com>"
+    ],
     "license": "ISC",
     "husky": {
         "hooks": {
@@ -43,6 +47,7 @@
         "@babel/preset-react": "^7.6.3",
         "@commitlint/cli": "^8.2.0",
         "@commitlint/config-conventional": "^8.2.0",
+        "@types/jest": "^24.0.23",
         "@typescript-eslint/parser": "^2.6.0",
         "commitlint": "^8.2.0",
         "eslint": "^6.6.0",
@@ -52,8 +57,10 @@
         "eslint-plugin-react": "^7.16.0",
         "eslint-plugin-react-hooks": "^2.2.0",
         "husky": "^3.0.9",
+        "jest": "^24.9.0",
         "lint-staged": "^9.4.2",
-        "prettier": "^1.18.2"
+        "prettier": "^1.18.2",
+        "ts-jest": "^24.1.0"
     },
     "dependencies": {
         "@babel/plugin-proposal-class-properties": "^7.5.5",
