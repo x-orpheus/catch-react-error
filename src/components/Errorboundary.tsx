@@ -6,16 +6,9 @@ export function serverMarkup(props: ErrorBoundaryProps): React.ReactNode {
     const element = props.children;
 
     try {
-        const staticMarkup = renderToStaticMarkup(element as React.ReactElement);
-        return (
-            <div
-                dangerouslySetInnerHTML={{
-                    __html: staticMarkup,
-                }}
-            />
-        );
+        return element;
     } catch (e) {
-        return <div>Something went Wrong</div>
+        return <div>Something is Wrong</div>
     }
 
 }
@@ -47,7 +40,11 @@ export class IsomorphicErrorBoundary extends React.Component<ErrorBoundaryProps,
         }
 
         if (this.state.hasError) {
+<<<<<<< HEAD
             return <div>Something went Wrong</div>
+=======
+            return <div>Something is Wrong</div>
+>>>>>>> f690a333b04079c4693583cf370b402c220be4f6
         }
 
         return this.props.children;

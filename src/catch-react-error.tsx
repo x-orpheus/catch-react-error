@@ -15,8 +15,6 @@ const catchreacterror =
                 return;
             }
 
-            //const fallback = InnerComponent.prototype && InnerComponent.prototype.fallback || FallbackFunc;
-
             type ComposedComponentInstance = InstanceType<typeof InnerComponent>;
 
             type WrapperComponentProps = ComposedComponentProps
@@ -32,7 +30,11 @@ const catchreacterror =
                         forwardedRef,
                     } = this.props;
                     return (
+<<<<<<< HEAD
                         <Boundary>
+=======
+                        <Boundary >
+>>>>>>> f690a333b04079c4693583cf370b402c220be4f6
                             <InnerComponent {...this.props} ref={forwardedRef} />
                         </Boundary>
                     )
