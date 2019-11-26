@@ -9,8 +9,6 @@ exports['default'] = exports.IsomorphicErrorBoundary = void 0;
 
 var React = _interopRequireWildcard(require('react'));
 
-var _server = require('react-dom/server');
-
 function _getRequireWildcardCache() {
     if (typeof WeakMap !== 'function') return null;
     var cache = new WeakMap();
@@ -157,14 +155,9 @@ function serverMarkup(props) {
     var element = props.children;
 
     try {
-        var staticMarkup = (0, _server.renderToStaticMarkup)(element);
-        return React.createElement('div', {
-            dangerouslySetInnerHTML: {
-                __html: staticMarkup,
-            },
-        });
+        return element;
     } catch (e) {
-        return props.fallback(e);
+        return React.createElement('div', null, 'Something is Wrong');
     }
 }
 
@@ -223,7 +216,11 @@ var IsomorphicErrorBoundary =
                         }
 
                         if (this.state.hasError) {
-                            return this.props.fallback(this.state.err);
+                            return React.createElement(
+                                'div',
+                                null,
+                                'Something is Wrong'
+                            );
                         }
 
                         return this.props.children;
