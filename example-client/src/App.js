@@ -40,10 +40,6 @@ class Test extends React.Component {
 }
 @catchreacterror(IsomorphicErrorBoundary)
 class Button extends React.Component {
-    fallback() {
-        return <div>Button Error FallBack</div>;
-    }
-
     hello() {
         console.log('hello');
     }

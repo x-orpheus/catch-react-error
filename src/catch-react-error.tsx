@@ -7,7 +7,7 @@ const FallbackFunc = (): ReactNode => <div>Loading</div>
 
 const catchreacterror =
     (Boundary: ComponentClass<ErrorBoundaryProps> = IsomorphicErrorBoundary) =>
-        <ComposedComponentProps extends {}>(InnerComponent: ComponentClass<ComponentProps>, fb?: (err: Error) => ReactNode) => {
+        <ComposedComponentProps extends {}>(InnerComponent: ComponentClass<ComponentProps>) => {
 
             if (Boundary && !Component.prototype.isPrototypeOf(Boundary.prototype)) {
                 console.warn("Catch-React-Error: The <ErrorBoundary /> component doesn't extend React.Component.  ErrorBoundary must extends React.Component");
@@ -15,7 +15,7 @@ const catchreacterror =
                 return;
             }
 
-            const fallback = fb || InnerComponent.prototype && InnerComponent.prototype.fallback || FallbackFunc;
+            //const fallback = InnerComponent.prototype && InnerComponent.prototype.fallback || FallbackFunc;
 
             type ComposedComponentInstance = InstanceType<typeof InnerComponent>;
 
@@ -32,7 +32,7 @@ const catchreacterror =
                         forwardedRef,
                     } = this.props;
                     return (
-                        <Boundary fallback={fallback}>
+                        <Boundary>
                             <InnerComponent {...this.props} ref={forwardedRef} />
                         </Boundary>
                     )

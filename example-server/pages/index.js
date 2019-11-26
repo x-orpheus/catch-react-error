@@ -20,9 +20,7 @@ class Test extends React.Component {
         };
         this.buttonRef = React.createRef();
     }
-    fallback() {
-        return <div>Test Error</div>;
-    }
+
     render() {
         const { foo } = this.state;
         console.log(foo);
@@ -40,10 +38,6 @@ class Test extends React.Component {
 }
 @catchreacterror()
 class Button extends React.Component {
-    fallback() {
-        return <div>Button Error FallBack</div>;
-    }
-
     render() {
         const emptyObj = {};
         console.log(emptyObj.a.b);

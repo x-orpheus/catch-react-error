@@ -15,7 +15,7 @@ export function serverMarkup(props: ErrorBoundaryProps): React.ReactNode {
             />
         );
     } catch (e) {
-        return props.fallback(e)
+        return <div>Something went Wrong</div>
     }
 
 }
@@ -47,7 +47,7 @@ export class IsomorphicErrorBoundary extends React.Component<ErrorBoundaryProps,
         }
 
         if (this.state.hasError) {
-            return this.props.fallback(this.state.err);
+            return <div>Something went Wrong</div>
         }
 
         return this.props.children;
