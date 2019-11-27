@@ -30,11 +30,7 @@ const catchreacterror =
                         forwardedRef,
                     } = this.props;
                     return (
-<<<<<<< HEAD
-                        <Boundary>
-=======
                         <Boundary >
->>>>>>> f690a333b04079c4693583cf370b402c220be4f6
                             <InnerComponent {...this.props} ref={forwardedRef} />
                         </Boundary>
                     )
