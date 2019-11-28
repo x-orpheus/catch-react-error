@@ -160,16 +160,12 @@ function _setPrototypeOf(o, p) {
     return _setPrototypeOf(o, p);
 }
 
-var FallbackFunc = function FallbackFunc() {
-    return React.createElement('div', null, 'Loading');
-};
-
 var catchreacterror = function catchreacterror() {
     var Boundary =
         arguments.length > 0 && arguments[0] !== undefined
             ? arguments[0]
             : _Errorboundary['default'];
-    return function(InnerComponent, fb) {
+    return function(InnerComponent) {
         if (
             Boundary &&
             !React.Component.prototype.isPrototypeOf(Boundary.prototype)
@@ -181,15 +177,10 @@ var catchreacterror = function catchreacterror() {
             return;
         }
 
-        var fallback =
-            fb ||
-            (InnerComponent.prototype && InnerComponent.prototype.fallback) ||
-            FallbackFunc;
-
         var WrapperComponent =
             /*#__PURE__*/
-            (function(_React$Component) {
-                _inherits(WrapperComponent, _React$Component);
+            (function(_Component) {
+                _inherits(WrapperComponent, _Component);
 
                 function WrapperComponent() {
                     _classCallCheck(this, WrapperComponent);
@@ -207,9 +198,7 @@ var catchreacterror = function catchreacterror() {
                             var forwardedRef = this.props.forwardedRef;
                             return React.createElement(
                                 Boundary,
-                                {
-                                    fallback: fallback,
-                                },
+                                null,
                                 React.createElement(
                                     InnerComponent,
                                     _extends({}, this.props, {

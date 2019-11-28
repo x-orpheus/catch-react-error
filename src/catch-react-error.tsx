@@ -3,8 +3,6 @@ import { Component, ComponentClass, forwardRef, Ref, ReactNode } from 'react';
 import IsomorphicErrorBoundary from './components/Errorboundary'
 import { ErrorBoundaryProps, ComponentProps } from './interface/propsInterface'
 
-const FallbackFunc = (): ReactNode => <div>Loading</div>
-
 const catchreacterror =
     (Boundary: ComponentClass<ErrorBoundaryProps> = IsomorphicErrorBoundary) =>
         <ComposedComponentProps extends {}>(InnerComponent: ComponentClass<ComponentProps>) => {
@@ -30,11 +28,7 @@ const catchreacterror =
                         forwardedRef,
                     } = this.props;
                     return (
-<<<<<<< HEAD
-                        <Boundary>
-=======
                         <Boundary >
->>>>>>> f690a333b04079c4693583cf370b402c220be4f6
                             <InnerComponent {...this.props} ref={forwardedRef} />
                         </Boundary>
                     )
