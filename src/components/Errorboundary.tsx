@@ -4,9 +4,9 @@ import { ErrorBoundaryProps, ErrorBoundaryState } from '../interface/propsInterf
 
 export function serverMarkup(props: ErrorBoundaryProps): React.ReactNode {
     const element = props.children;
-
     try {
-        return element;
+        const __html = renderToStaticMarkup(element as React.ReactElement)
+        return <div dangerouslySetInnerHTML={{ __html }} />;
     } catch (e) {
         return <div>Something is Wrong</div>
     }

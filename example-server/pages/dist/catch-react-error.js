@@ -74,6 +74,23 @@ function _typeof(obj) {
     return _typeof(obj);
 }
 
+function _extends() {
+    _extends =
+        Object.assign ||
+        function(target) {
+            for (var i = 1; i < arguments.length; i++) {
+                var source = arguments[i];
+                for (var key in source) {
+                    if (Object.prototype.hasOwnProperty.call(source, key)) {
+                        target[key] = source[key];
+                    }
+                }
+            }
+            return target;
+        };
+    return _extends.apply(this, arguments);
+}
+
 function _classCallCheck(instance, Constructor) {
     if (!(instance instanceof Constructor)) {
         throw new TypeError('Cannot call a class as a function');
@@ -143,30 +160,12 @@ function _setPrototypeOf(o, p) {
     return _setPrototypeOf(o, p);
 }
 
-var FallbackFunc = function FallbackFunc() {
-    return React.createElement('div', null, 'Loading');
-};
-
-var isClass = function isClass(func) {
-    return (
-        typeof func === 'function' &&
-        /^class\s/.test(Function.prototype.toString.call(func))
-    );
-};
-
-var isFunction = function isFunction(func) {
-    return (
-        typeof func === 'function' &&
-        !/^class\s/.test(Function.prototype.toString.call(func))
-    );
-};
-
 var catchreacterror = function catchreacterror() {
     var Boundary =
         arguments.length > 0 && arguments[0] !== undefined
             ? arguments[0]
             : _Errorboundary['default'];
-    return function(InnerComponent, fb) {
+    return function(InnerComponent) {
         if (
             Boundary &&
             !React.Component.prototype.isPrototypeOf(Boundary.prototype)
@@ -178,42 +177,53 @@ var catchreacterror = function catchreacterror() {
             return;
         }
 
-        var fallback =
-            fb ||
-            (InnerComponent.prototype && InnerComponent.prototype.fallback) ||
-            FallbackFunc;
-        return (
+        var WrapperComponent =
             /*#__PURE__*/
-            (function(_React$Component) {
-                _inherits(_class, _React$Component);
+            (function(_Component) {
+                _inherits(WrapperComponent, _Component);
 
-                function _class() {
-                    _classCallCheck(this, _class);
+                function WrapperComponent() {
+                    _classCallCheck(this, WrapperComponent);
 
                     return _possibleConstructorReturn(
                         this,
-                        _getPrototypeOf(_class).apply(this, arguments)
+                        _getPrototypeOf(WrapperComponent).apply(this, arguments)
                     );
                 }
 
-                _createClass(_class, [
+                _createClass(WrapperComponent, [
                     {
                         key: 'render',
                         value: function render() {
+                            var forwardedRef = this.props.forwardedRef;
                             return React.createElement(
                                 Boundary,
-                                {
-                                    fallback: fallback,
-                                },
-                                React.createElement(InnerComponent, this.props)
+                                null,
+                                React.createElement(
+                                    InnerComponent,
+                                    _extends({}, this.props, {
+                                        ref: forwardedRef,
+                                    })
+                                )
                             );
                         },
                     },
                 ]);
 
-                return _class;
-            })(React.Component)
-        );
+                return WrapperComponent;
+            })(React.Component);
+
+        return (0, React.forwardRef)(function(props, ref) {
+            return React.createElement(
+                WrapperComponent,
+                _extends(
+                    {
+                        forwardedRef: ref,
+                    },
+                    props
+                )
+            );
+        });
     };
 };
 
