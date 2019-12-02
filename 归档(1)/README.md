@@ -56,7 +56,7 @@ class Test extends React.Component {
 
 拷贝下面代码，修改成自己所需。
 
-```js
+``` js
 class CustomErrorBoundary extends React.Component {
     constructor(props) {
         super(props);

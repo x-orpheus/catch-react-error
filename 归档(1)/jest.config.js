@@ -6,6 +6,6 @@ module.exports = {
     ],
     transform: {
         '^.+\\.(ts|tsx)?$': 'ts-jest',
-        '^.+\\.[t|j]sx?$': 'babel-jest',
+        "^.+\\.[t|j]sx?$": "babel-jest"
     },
 };

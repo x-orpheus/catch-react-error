@@ -42,7 +42,7 @@ describe('When a JS error is caught in a child component', () => {
         const ProblemChild = () => {
             throw new Error('Error thrown from problem child');
             return <div>Error</div>;
-        };
+        }
         wrapper = mount(
             <IsomorphicErrorBoundary>
                 <ProblemChild />

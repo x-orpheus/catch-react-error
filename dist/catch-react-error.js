@@ -28,24 +28,28 @@ function _interopRequireWildcard(obj) {
     if (obj && obj.__esModule) {
         return obj;
     }
+    if (
+        obj === null ||
+        (_typeof(obj) !== 'object' && typeof obj !== 'function')
+    ) {
+        return { default: obj };
+    }
     var cache = _getRequireWildcardCache();
     if (cache && cache.has(obj)) {
         return cache.get(obj);
     }
     var newObj = {};
-    if (obj != null) {
-        var hasPropertyDescriptor =
-            Object.defineProperty && Object.getOwnPropertyDescriptor;
-        for (var key in obj) {
-            if (Object.prototype.hasOwnProperty.call(obj, key)) {
-                var desc = hasPropertyDescriptor
-                    ? Object.getOwnPropertyDescriptor(obj, key)
-                    : null;
-                if (desc && (desc.get || desc.set)) {
-                    Object.defineProperty(newObj, key, desc);
-                } else {
-                    newObj[key] = obj[key];
-                }
+    var hasPropertyDescriptor =
+        Object.defineProperty && Object.getOwnPropertyDescriptor;
+    for (var key in obj) {
+        if (Object.prototype.hasOwnProperty.call(obj, key)) {
+            var desc = hasPropertyDescriptor
+                ? Object.getOwnPropertyDescriptor(obj, key)
+                : null;
+            if (desc && (desc.get || desc.set)) {
+                Object.defineProperty(newObj, key, desc);
+            } else {
+                newObj[key] = obj[key];
             }
         }
     }
@@ -174,7 +178,13 @@ var catchreacterror = function catchreacterror() {
                 "Catch-React-Error: The <ErrorBoundary /> component doesn't extend React.Component.  ErrorBoundary must extends React.Component"
             );
             Boundary = _Errorboundary['default'];
-            return;
+        }
+
+        if (Boundary && !Boundary.prototype.componentDidCatch) {
+            console.warn(
+                "Catch-React-Error: The <ErrorBoundary /> component doesn't have componentDidCatch lifecycle.  ErrorBoundary must have componentDidCatch lifecycle"
+            );
+            Boundary = _Errorboundary['default'];
         }
 
         var WrapperComponent =
