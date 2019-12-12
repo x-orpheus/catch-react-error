@@ -1,17 +1,87 @@
 # catch-react-error
 
+## 一个 bug 引发的血案
+
+韩国著名男子天团之前在我们平台上架了一张重磅的数字专辑，本来是一件喜大普奔的好事，结果上架后投诉蜂拥而至。部分用户反馈页面进入就奔溃，紧急排查了之后发现就是一行代码导致的错误，下面就是这段 jsx 代码。
+
+```js
+  render() {
+     const { data, isCreator, canSignOut, canSignIn } = this.props;
+     const {  supportCard, creator, fansList, visitorId, memberCount } = data;
+     let getUserIcon = (obj) => {
+         if (obj.userType == 4) {
+             return (<i className="icn u-svg u-svg-yyr_sml" />);
+         } else if (obj.authStatus == 1) {
+             return (<i className="icn u-svg u-svg-vip_sml" />);
+         } else if (obj.expertTags && creator.expertTags.length > 0) {
+             return (<i className="icn u-svg u-svg-daren_sml" />);
+         }
+         return null;
+     };
+     ...
+  }
+
+```
+
+这行`if (obj.expertTags && creator.expertTags.length )` 里面的 creator 应该是 obj。
+
+对于上面这种情况，lint 工具无法检测出来，creator 恰好同时也是一个变量，这是一个纯粹的逻辑错误。
+
+事情的结果就是我们紧急修复了 bug，官方道歉，相关开发人员得到了队友的处罚，至此告一段落。但是有个声音一直在我心中回响 **如何避免这种事故再次发生** 。 对于这种错误，堵是堵不住的，那么我们就应该思考设计一种兜底机制，能够隔离这种错误，使页面部分报错，而不是整个网页挂掉。
+
 ## ErrorBoundary
 
-从 React 16 开始，没有被任何 ErrorBoundary 捕获的错误都将会导致[整个 React 组件树被销毁](https://reactjs.org/docs/error-boundaries.html#new-behavior-for-uncaught-errors)
+从 React 16 开始,引入了 ErrorBoundary 组件，它可以捕获它的**子组件**中产生的错误，记录错误日志，并展示降级内容。
 
-ErrorBoundary 也属于 React 组件中的一种，这个组件可以用来捕获它的**子组件**中产生的错误，特有的`componentDidCatch`生命周期可以捕获子组件在渲染，生命周期以及构造函数内的错误，并记录错误日志；在错误发生时，可以展示一个错误提示或者`fallback`方案，以避免因为局部组件的错误进而整个组件树崩溃，导致页面白屏。
+> Error boundaries are React components that **catch JavaScript errors anywhere in their child component tree, log those errors, and display a fallback UI** instead of the component tree that crashed
 
-ErrorBoundary 翻译成汉语为错误边界，一方面，可以立即为这个组件是所有自组建发生错误的捕获者，类似于事件冒泡的机制，错误信息会被最近的 ErrorBoundary 捕获不在继续向上冒泡；所以这个组件局势错误的一个边界；另一方面可以理解为胡霍错误的能力是有边界的，并不是所有的错误都可以被捕获，那具体什么错误不能被捕获呢？
+这个特性让我们眼前一亮，精神为之振奋，仿佛在黑暗中看到了一丝亮光。但是经过研究发现，Error Boundary 只能捕获子组件的 render 错误，有一定的局限性，以下的错误是无法处理的:
 
-- Event Handlers [事件处理函数发生的错误](https://github.com/facebook/react/issues/11409)(e.g.,onClick,onMouseEnter)
-- Asynchronous code [异步代码](https://github.com/facebook/react/issues/11334)(e.g.,requestAnimationFrame，setTimeout,promise)
-- Server side rendering [服务端渲染]()
-- Errors thrown in the error boundary itself (ErrorBoundary 组件本身发生了错误)
+- [事件处理函数](https://github.com/facebook/react/issues/11409)(比如 onClick,onMouseEnter)
+- [异步代码](https://github.com/facebook/react/issues/11334)(如 requestAnimationFrame，setTimeout,promise)
+- 服务端渲染
+- ErrorBoundary 组件本身的错误。
+
+### 如何创建一个 ErrorBoundary Component
+
+这个非常简单，就是在 React.Component 组件里面添加`static getDerivedStateFromError()`或者`componentDidCatch()`。前者在错误发生时进行降级处理，后面一个函数主要是做日志记录，官方代码如下
+
+```js
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error) {
+    // Update state so the next render will show the fallback UI.
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    // You can also log the error to an error reporting service
+    logErrorToMyService(error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      // You can render any custom fallback UI
+      return <h1>Something went wrong.</h1>;
+    }
+
+    return this.props.children;
+  }
+}
+```
+
+可以看到`getDerivedStateFromError`捕获了错误，然后设置了`hasError`变量，`render`函数里面根据变量的值返回降级的处理`<h1>Something went wrong.</h1>`。
+至此一个 ErrorBoundary 组件已经定义好了，使用时只要包裹一个子组件即可。
+
+```js
+<ErrorBoundary>
+  <MyWidget />
+</ErrorBoundary>
+```
 
 ## 同构应用与 ErrorBoundary
 
