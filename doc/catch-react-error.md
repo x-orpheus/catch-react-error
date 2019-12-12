@@ -1,8 +1,10 @@
 # catch-react-error
 
+> 此方案为云音乐营收稳定性项目的产出，参与者[章伟东](https://github.com/xff1874)和[赵祥涛]()
+
 ## 一个 bug 引发的血案
 
-韩国著名男子天团之前在我们平台上架了一张重磅的数字专辑，本来是一件喜大普奔的好事，结果上架后投诉蜂拥而至。部分用户反馈页面进入就奔溃，紧急排查了之后发现就是一行代码导致的错误，下面就是这段 jsx 代码。
+韩国某著名男子天团之前在我们平台上架了一张重磅的数字专辑，本来是一件喜大普奔的好事，结果上架后投诉蜂拥而至。部分用户反馈页面打开就奔溃，紧急排查了之后发现就是一行代码导致，下面就是这段 jsx 代码。
 
 ```js
   render() {
@@ -23,9 +25,9 @@
 
 ```
 
-这行`if (obj.expertTags && creator.expertTags.length )` 里面的 creator 应该是 obj。
+这行`if (obj.expertTags && creator.expertTags.length )` 里面的 creator 应该是 obj，由于手滑，不小心写错了。
 
-对于上面这种情况，lint 工具无法检测出来，creator 恰好同时也是一个变量，这是一个纯粹的逻辑错误。
+对于上面这种情况，lint 工具无法检测出来，因为 creator 恰好同时也是一个变量，这是一个纯粹的逻辑错误。
 
 事情的结果就是我们紧急修复了 bug，官方道歉，相关开发人员得到了队友的处罚，至此告一段落。但是有个声音一直在我心中回响 **如何避免这种事故再次发生** 。 对于这种错误，堵是堵不住的，那么我们就应该思考设计一种兜底机制，能够隔离这种错误，使页面部分报错，而不是整个网页挂掉。
 
@@ -83,7 +85,90 @@ class ErrorBoundary extends React.Component {
 </ErrorBoundary>
 ```
 
-## 同构应用与 ErrorBoundary
+### ErrorBoundary 的普遍用法。
+
+看到 ErrorBoundary 的使用方法之后，大部分团队的用法是写一个 HOC，然后包装一下,比如下面 scratch 的用法
+
+```js
+export default errorBoundaryHOC("Blocks")(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(Blocks)
+);
+```
+
+export 的格式有[多种](https://developer.mozilla.org/en-US/docs/web/javascript/reference/statements/export)
+
+```js
+export class ClassName {...}
+export { name1, name2, …, nameN };
+export { variable1 as name1, variable2 as name2, …, nameN };
+export * as name1 from …
+
+```
+
+这样带来 2 个问题
+
+1. 对于存量代码修改起来不方便,有时需要修改组件结构
+2. 添加删除 HOC 工作量大，非常容易出错
+
+因此，我们在考虑是否有一种方法可以比较方便的处理上面的问题。
+
+## 青铜时代-BabelPlugin
+
+在碰到上面 HOC 的问题之后，我们把目光锁定在能否直接在子组件包裹一个 ErrorBoundary 组件。
+
+通过[babel plugin](https://github.com/jamiebuilds/babel-handbook/blob/master/translations/en/plugin-handbook.md)的方式，在代码编译阶段自动导入 ErrorBoundary 并批量给组件包裹 ErrorBoundary,代码大致思路如下：
+
+```js
+const babelTemplate = require("@babel/template");
+const t = require("babel-types");
+
+const visitor = {
+  Program: {
+    // 在文件头部导入ErrorBoundary
+    exit(path) {
+      // string 代码转换为AST
+      const impstm = template.default.ast(
+        "import ErrorBoundary from '$components/ErrorBoundary'"
+      );
+      path.node.body.unshift(impstm);
+    }
+  },
+  /**
+   * 包裹return jsxElement
+   * @param {*} path
+   */
+  ReturnStatement(path) {
+    const parentFunc = path.getFunctionParent();
+    const oldJsx = path.node.argument;
+    if (
+      !oldJsx ||
+      ((!parentFunc.node.key || parentFunc.node.key.name !== "render") &&
+        oldJsx.type !== "JSXElement")
+    ) {
+      return;
+    }
+
+    // 创建被ErrorBoundary包裹之后的组件树
+    const openingElement = t.JSXOpeningElement(
+      t.JSXIdentifier("ErrorBoundary")
+    );
+    const closingElement = t.JSXClosingElement(
+      t.JSXIdentifier("ErrorBoundary")
+    );
+    const newJsx = t.JSXElement(openingElement, closingElement, oldJsx);
+
+    // 插入新的jxsElement,并删除旧的
+    let newReturnStm = t.returnStatement(newJsx);
+    path.remove();
+    path.parent.body.push(newReturnStm);
+  }
+};
+```
+
+## 黄金时代-TS Decorator
 
 现在主流的项目都会采用服务端渲染的方式，那么如果在服务端渲染的过程中发生了错误，不仅可能导致首屏白屏，还可能导致整体静态 HTML 的生成(包括相关 JS,CSS，服务端数据的插入等)，进而客户端 re-render 的时候也会白屏，所以我们必须寻找一个能够在同构应用中都可以处理错误的方式。
 
@@ -278,54 +363,3 @@ class CustomErrorBoundary extends React.Component {
 ```
 
 ## 其他设计思路
-
-### babel-plugin
-
-通过[babel plugin](https://github.com/jamiebuilds/babel-handbook/blob/master/translations/en/plugin-handbook.md)的方式，在代码编译阶段自动导入 ErrorBoundary 并批量给组件包裹 ErrorBoundary,代码大致思路如下：
-
-```js
-const babelTemplate = require("@babel/template");
-const t = require("babel-types");
-
-const visitor = {
-  Program: {
-    // 在文件头部导入ErrorBoundary
-    exit(path) {
-      // string 代码转换为AST
-      const impstm = template.default.ast(
-        "import ErrorBoundary from '$components/ErrorBoundary'"
-      );
-      path.node.body.unshift(impstm);
-    }
-  },
-  /**
-   * 包裹return jsxElement
-   * @param {*} path
-   */
-  ReturnStatement(path) {
-    const parentFunc = path.getFunctionParent();
-    const oldJsx = path.node.argument;
-    if (
-      !oldJsx ||
-      ((!parentFunc.node.key || parentFunc.node.key.name !== "render") &&
-        oldJsx.type !== "JSXElement")
-    ) {
-      return;
-    }
-
-    // 创建被ErrorBoundary包裹之后的组件树
-    const openingElement = t.JSXOpeningElement(
-      t.JSXIdentifier("ErrorBoundary")
-    );
-    const closingElement = t.JSXClosingElement(
-      t.JSXIdentifier("ErrorBoundary")
-    );
-    const newJsx = t.JSXElement(openingElement, closingElement, oldJsx);
-
-    // 插入新的jxsElement,并删除旧的
-    let newReturnStm = t.returnStatement(newJsx);
-    path.remove();
-    path.parent.body.push(newReturnStm);
-  }
-};
-```
