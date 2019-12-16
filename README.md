@@ -4,6 +4,22 @@
 
 使用 ES7 的`Decorator`配合`React ErrorBoundary`捕获 React 生命周期期间发生的错误
 
+### example
+
+#### client side server
+
+```sh
+cd example-client
+npm start
+```
+
+#### server side server
+
+```sh
+cd example-server
+npm run dev
+```
+
 ### 使用方式
 
 #### 1.安装 catch-react-error
@@ -24,17 +40,17 @@ npm install --save-dev @babel/plugin-proposal-class-properties
 
 ```json
 {
-    "plugins": [
-        ["@babel/plugin-proposal-decorators", { "legacy": true }],
-        ["@babel/plugin-proposal-class-properties", { "loose": true }]
-    ]
+  "plugins": [
+    ["@babel/plugin-proposal-decorators", { "legacy": true }],
+    ["@babel/plugin-proposal-class-properties", { "loose": true }]
+  ]
 }
 ```
 
 #### 3.导入 catch-react-error
 
 ```jsx
-import catchreacterror from '@music/catch-react-error';
+import catchreacterror from "@music/catch-react-error";
 ```
 
 #### 4.使用@catchreacterror decorator
@@ -42,9 +58,9 @@ import catchreacterror from '@music/catch-react-error';
 ```jsx
 @catchreacterror()
 class Test extends React.Component {
-    render() {
-        return <Button text="click me" />;
-    }
+  render() {
+    return <Button text="click me" />;
+  }
 }
 ```
 
@@ -58,36 +74,36 @@ class Test extends React.Component {
 
 ```js
 class CustomErrorBoundary extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = { hasError: false };
-    }
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
 
-    componentDidCatch(error, info) {
-        this.setState({ hasError: true });
-    }
+  componentDidCatch(error, info) {
+    this.setState({ hasError: true });
+  }
 
-    is_server() {
-        return !(typeof window !== 'undefined' && window.document);
-    }
-    handleServer(props) {
-        const element = props.children;
+  is_server() {
+    return !(typeof window !== "undefined" && window.document);
+  }
+  handleServer(props) {
+    const element = props.children;
 
-        try {
-            return element;
-        } catch (e) {
-            return 'Something went wrong';
-        }
+    try {
+      return element;
+    } catch (e) {
+      return "Something went wrong";
     }
+  }
 
-    render() {
-        if (this.is_server()) {
-            return this.handleServer(this.props);
-        }
-        if (this.state.hasError) {
-            return <h1>Something went wrong.</h1>;
-        }
-        return this.props.children;
+  render() {
+    if (this.is_server()) {
+      return this.handleServer(this.props);
     }
+    if (this.state.hasError) {
+      return <h1>Something went wrong.</h1>;
+    }
+    return this.props.children;
+  }
 }
 ```
