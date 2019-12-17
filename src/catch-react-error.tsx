@@ -17,15 +17,16 @@ const catchreacterror =
                 Boundary = IsomorphicErrorBoundary
             }
 
-            type ComposedComponentInstance =
-                InstanceType<typeof InnerComponent>
+            if (isComponentClass(InnerComponent)) {
 
-            type ComponnetProps = {
-                forwardedRef?: Ref<ComposedComponentInstance>
-                children?: ReactNode;
-            }
-            if (is_server()) {
-                if (isComponentClass(InnerComponent)) {
+                type ComposedComponentInstance =
+                    InstanceType<typeof InnerComponent>
+
+                type ComponnetProps = {
+                    forwardedRef?: Ref<ComposedComponentInstance>
+                    children?: ReactNode;
+                }
+                if (is_server()) {
                     const originalRender = InnerComponent.prototype.render
 
                     InnerComponent.prototype.render = function () {
@@ -36,7 +37,29 @@ const catchreacterror =
                             return <div>Something is Wrong</div>
                         }
                     }
-                } else {
+                }
+
+                class WrapperComponent extends Component<ComponnetProps, {}>  {
+                    render() {
+                        const {
+                            forwardedRef,
+                        } = this.props;
+                        return (
+                            <Boundary >
+                                {isComponentClass(InnerComponent) ?
+                                    <InnerComponent {...this.props} ref={forwardedRef} /> :
+                                    <InnerComponent {...this.props} />
+                                }
+                            </Boundary>
+                        )
+                    }
+                }
+
+                return forwardRef<ComposedComponentInstance, ComponnetProps>(
+                    (props, ref) => <WrapperComponent forwardedRef={ref} {...props} />)
+
+            } else {
+                if (is_server()) {
                     const originalFun = InnerComponent;
                     InnerComponent = function () {
                         try {
@@ -47,26 +70,17 @@ const catchreacterror =
                         }
                     }
                 }
-            }
 
-            class WrapperComponent extends Component<ComponnetProps, {}>  {
-                render() {
-                    const {
-                        forwardedRef,
-                    } = this.props;
-                    return (
-                        <Boundary >
-                            {isComponentClass(InnerComponent) ?
-                                <InnerComponent {...this.props} ref={forwardedRef} /> :
-                                <InnerComponent {...this.props} />
-                            }
-                        </Boundary>
-                    )
+                type ComponnetProps = {
+                    children?: ReactNode;
                 }
-            }
 
-            return forwardRef<ComposedComponentInstance, ComponnetProps>(
-                (props, ref) => <WrapperComponent forwardedRef={ref} {...props} />)
+                return (props: ComponnetProps) => (
+                    <Boundary >
+                        <InnerComponent {...props} />
+                    </Boundary>
+                )
+            }
         }
 
 export default catchreacterror
