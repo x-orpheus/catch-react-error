@@ -1,6 +1,6 @@
 # catch-react-error
 
-> 此方案为云音乐营收稳定性项目的产出，参与者[章伟东](https://github.com/xff1874)和[赵祥涛]()
+> 此项目为云音乐营收组稳定保证工程的前端产出，参与者[章伟东](https://github.com/xff1874)和[赵祥涛](https://sylvenas.github.io/)
 
 ## 一个 bug 引发的血案
 
@@ -98,7 +98,7 @@ export default errorBoundaryHOC("Blocks")(
 );
 ```
 
-export 的格式有[多种](https://developer.mozilla.org/en-US/docs/web/javascript/reference/statements/export)
+但是 export 的格式有[多种](https://developer.mozilla.org/en-US/docs/web/javascript/reference/statements/export)
 
 ```js
 export class ClassName {...}
@@ -117,9 +117,65 @@ export * as name1 from …
 
 ## 青铜时代-BabelPlugin
 
-在碰到上面 HOC 的问题之后，我们把目光锁定在能否直接在子组件包裹一个 ErrorBoundary 组件。
+在碰到上面 HOC 的问题之后，我们把目光锁定在能否直接在子组件包裹一个 ErrorBoundary 组件，流程示意图如下：
 
-通过[babel plugin](https://github.com/jamiebuilds/babel-handbook/blob/master/translations/en/plugin-handbook.md)的方式，在代码编译阶段自动导入 ErrorBoundary 并批量给组件包裹 ErrorBoundary,代码大致思路如下：
+<img src ="https://p1.music.126.net/CmbPWqDH3xZ198OFWb6JBQ==/109951164546488873.png" height="200" width="100%">
+
+简单思路如下：
+
+1. 判断是否是 React16 版本
+2. 读取配置文件
+3. 检测是否已经包裹了 ErrorBoundary 组件。 如果没有,走 patch 流程。如果有，根据 force 标签判断是否重新包裹。
+4. path 流程：a.先引入 ErrorBoundary 组件 b.wrap children
+
+配置文件如下（.catch-react-error-config.json）：
+
+```json
+{
+  "sentinel": {
+    "imports": "import ServerErrorBoundary from '$components/ServerErrorBoundary'",
+    "errorHandleComponent": "ServerErrorBoundary",
+    "filter": ["/actual/"]
+  },
+  "sourceDir": "test/fixtures/wrapCustomComponent"
+}
+```
+
+源码文件如下
+
+```js
+import React, { Component } from "react";
+
+class App extends Component {
+  render() {
+    return <CustomComponent />;
+  }
+}
+```
+
+读取配置文件 patch 之后的代码为
+
+```js
+//isCatchReactError
+import ServerErrorBoundary from "$components/ServerErrorBoundary";
+import React, { Component } from "react";
+
+class App extends Component {
+  render() {
+    return (
+      <ServerErrorBoundary isCatchReactError>
+        {<CustomComponent />}
+      </ServerErrorBoundary>
+    );
+  }
+}
+```
+
+可以看到头部多了
+`import ServerErrorBoundary from '$components/ServerErrorBoundary'`然后整个组件也被`ServerErrorBoundary`包裹，
+`isCatchReactError`用来标记位，主要是下次 patch 的时候根据这个标记位做对应的更新，防止被引入多次。
+
+其思路主要通过[babel plugin](https://github.com/jamiebuilds/babel-handbook/blob/master/translations/en/plugin-handbook.md)的方式，在代码编译阶段自动导入 ErrorBoundary 并批量组件包裹,核心代码：
 
 ```js
 const babelTemplate = require("@babel/template");
@@ -168,7 +224,57 @@ const visitor = {
 };
 ```
 
+这个方法的思路主要是给现有的代码包裹了配置文件里面的`sentinel.imports`。只是这个`imports`刚好是一个`errorboundary`，除了这个，也可以注入其他比如 imports 是一个`LogComponent`等。
+
+完整 github 代码实现[这里](https://github.com/xff1874/react-error-sentinel)
+
+虽然实现了错误的捕获和兜底方案，但是非常复杂，用起来也麻烦，要配置`webpack`和`.catch-react-error-config.json`还要运行脚手架，效果不令人满意。
+
 ## 黄金时代-TS Decorator
+
+在上述方案出来之后，很长时间都找不到一个有效的方案，要么太难用（babelplugin）,要么对于源码的改动太大（hoc）,到底有没有一种方法能够两者结合，直到遇到了 TS decorator。
+
+TS 里面提供了类装饰器，方法装饰器，访问器装饰器，属性装饰器，参数装饰器，具体关于装饰器见[官网](https://www.tslang.cn/docs/handbook/decorators.html).
+
+其中的类装饰器让人眼前一亮，设计代码如下
+
+```jsx
+@catchreacterror()
+class Test extends React.Component {
+  render() {
+    return <Button text="click me" />;
+  }
+}
+```
+
+`catchreacterror`函数的参数为`ErrorBoundary`组件,用户可以使用自定义的`ErrorBoundary`，如果不传递则使用默认的`IsomorphicErrorBoundary`组件；
+
+返回值为一个典型的`HOC`，使用`ErrorBoundary`包裹原组件，并传递`ref`。
+
+```js
+import React, { Component, forwardRef } from "react";
+
+const catchreacterror = (
+  Boundary = IsomorphicErrorBoundary
+) => InnerComponent => {
+  class WrapperComponent extends Component {
+    render() {
+      const { forwardedRef } = this.props;
+      return (
+        <Boundary>
+          <InnerComponent {...this.props} ref={forwardedRef} />
+        </Boundary>
+      );
+    }
+  }
+
+  return forwardRef((props, ref) => (
+    <WrapperComponent forwardedRef={ref} {...props} />
+  ));
+};
+```
+
+### 服务端渲染错误捕获
 
 现在主流的项目都会采用服务端渲染的方式，那么如果在服务端渲染的过程中发生了错误，不仅可能导致首屏白屏，还可能导致整体静态 HTML 的生成(包括相关 JS,CSS，服务端数据的插入等)，进而客户端 re-render 的时候也会白屏，所以我们必须寻找一个能够在同构应用中都可以处理错误的方式。
 
@@ -186,15 +292,7 @@ function serverMarkup(props) {
 }
 ```
 
-如果是在客户端渲染的话，则不需要这么处理，直接使用 ErrorBoundary 组件包裹子组件即可，所以需要区别客户端和服务端：
-
-```js
-function is_server(): boolean {
-  return !(typeof window !== "undefined" && window.document);
-}
-```
-
-综合考虑了以上两点之后，就可以写出来可以用于同构应用的`IsomorphicErrorBoundary`:
+所以`IsomorphicErrorBoundary`只需要多处理 server 端的代码，即可捕获两端的错误:
 
 ```js
 import React from "react";
@@ -244,35 +342,6 @@ export class IsomorphicErrorBoundary extends React.Component {
 }
 export default IsomorphicErrorBoundary;
 ```
-
-## catch-react-eror decorator
-
-上面实现了`IsomorphicErrorBoundary`之后，我们可以直接包装想要被`ErrorBoundary`包裹的组件了，使用起来和普通的`ErrorBoundary`并没有什么区别；不过这样代码侵入性比较强一点，可以借助 ES7 的`Decorator`来包裹一下组件，本质上来说，就是一个`Hight-Order-Component`，HOC 就要考虑传递 ref 的问题，这里借助`forwardRef`方法来传递 ref。
-
-```js
-import React, { Component, forwardRef } from "react";
-
-const catchreacterror = (
-  Boundary = IsomorphicErrorBoundary
-) => InnerComponent => {
-  class WrapperComponent extends Component {
-    render() {
-      const { forwardedRef } = this.props;
-      return (
-        <Boundary>
-          <InnerComponent {...this.props} ref={forwardedRef} />
-        </Boundary>
-      );
-    }
-  }
-
-  return forwardRef((props, ref) => (
-    <WrapperComponent forwardedRef={ref} {...props} />
-  ));
-};
-```
-
-`catchreacterror`函数的参数为`ErrorBoundary`组件,用户可以使用自定义的`ErrorBoundary`，如果不传递则使用默认的`IsomorphicErrorBoundary`组件；返回值为一个典型的`HOC`，使用`ErrorBoundary`包裹原组件，并传递`ref`。
 
 ### catch-react-error 使用方式
 
@@ -362,4 +431,4 @@ class CustomErrorBoundary extends React.Component {
 }
 ```
 
-## 其他设计思路
+完整的 github 代码在此[catch-react-error]()
