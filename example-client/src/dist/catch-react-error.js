@@ -183,8 +183,8 @@ var catchreacterror = function catchreacterror() {
       Boundary = _Errorboundary["default"];
     }
 
-    if ((0, _index.is_server)()) {
-      if (InnerComponent.prototype && InnerComponent.prototype.render) {
+    if ((0, _index.isComponentClass)(InnerComponent)) {
+      if ((0, _index.is_server)()) {
         var originalRender = InnerComponent.prototype.render;
 
         InnerComponent.prototype.render = function() {
@@ -195,70 +195,79 @@ var catchreacterror = function catchreacterror() {
             return React.createElement("div", null, "Something is Wrong");
           }
         };
-      } else if (
-        !InnerComponent.prototype ||
-        !InnerComponent.prototype.render
-      ) {
+      }
+
+      var WrapperComponent =
+        /*#__PURE__*/
+        (function(_Component) {
+          _inherits(WrapperComponent, _Component);
+
+          function WrapperComponent() {
+            _classCallCheck(this, WrapperComponent);
+
+            return _possibleConstructorReturn(
+              this,
+              _getPrototypeOf(WrapperComponent).apply(this, arguments)
+            );
+          }
+
+          _createClass(WrapperComponent, [
+            {
+              key: "render",
+              value: function render() {
+                var forwardedRef = this.props.forwardedRef;
+                return React.createElement(
+                  Boundary,
+                  null,
+                  (0, _index.isComponentClass)(InnerComponent)
+                    ? React.createElement(
+                        InnerComponent,
+                        _extends({}, this.props, {
+                          ref: forwardedRef
+                        })
+                      )
+                    : React.createElement(InnerComponent, this.props)
+                );
+              }
+            }
+          ]);
+
+          return WrapperComponent;
+        })(React.Component);
+
+      return (0, React.forwardRef)(function(props, ref) {
+        return React.createElement(
+          WrapperComponent,
+          _extends(
+            {
+              forwardedRef: ref
+            },
+            props
+          )
+        );
+      });
+    } else {
+      if ((0, _index.is_server)()) {
         var originalFun = InnerComponent;
 
         InnerComponent = function InnerComponent() {
           try {
-            return originalFun.apply(void 0, arguments);
+            return originalFun.apply(null, arguments);
           } catch (error) {
             console.error(error);
             return React.createElement("div", null, "Something is Wrong");
           }
         };
       }
+
+      return function(props) {
+        return React.createElement(
+          Boundary,
+          null,
+          React.createElement(InnerComponent, props)
+        );
+      };
     }
-
-    var WrapperComponent =
-      /*#__PURE__*/
-      (function(_Component) {
-        _inherits(WrapperComponent, _Component);
-
-        function WrapperComponent() {
-          _classCallCheck(this, WrapperComponent);
-
-          return _possibleConstructorReturn(
-            this,
-            _getPrototypeOf(WrapperComponent).apply(this, arguments)
-          );
-        }
-
-        _createClass(WrapperComponent, [
-          {
-            key: "render",
-            value: function render() {
-              var forwardedRef = this.props.forwardedRef;
-              return React.createElement(
-                Boundary,
-                null,
-                React.createElement(
-                  InnerComponent,
-                  _extends({}, this.props, {
-                    ref: forwardedRef
-                  })
-                )
-              );
-            }
-          }
-        ]);
-
-        return WrapperComponent;
-      })(React.Component);
-
-    return (0, React.forwardRef)(function(props, ref) {
-      return React.createElement(
-        WrapperComponent,
-        _extends(
-          {
-            forwardedRef: ref
-          },
-          props
-        )
-      );
-    });
   };
 };
 
