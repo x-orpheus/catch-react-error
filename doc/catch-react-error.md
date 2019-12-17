@@ -431,4 +431,4 @@ class CustomErrorBoundary extends React.Component {
 }
 ```
 
-完整的 github 代码在此[catch-react-error]()
+完整的 github 代码在此[catch-react-error](https://github.com/x-orpheus/catch-react-error)
