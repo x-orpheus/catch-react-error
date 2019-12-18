@@ -9,7 +9,7 @@
 #### 1.安装 catch-react-error
 
 ```sh
-nenpm install @music/catch-react-error
+nenpm install catch-react-error
 ```
 
 #### 2.安装 ES7 Decorator babel plugin
@@ -34,7 +34,7 @@ npm install --save-dev @babel/plugin-proposal-class-properties
 #### 3.导入 catch-react-error
 
 ```jsx
-import catchreacterror from "@music/catch-react-error";
+import catchreacterror from "catch-react-error";
 ```
 
 #### 4.使用@catchreacterror decorator
