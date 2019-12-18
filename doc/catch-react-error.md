@@ -25,15 +25,15 @@
 
 ```
 
-这行`if (obj.expertTags && creator.expertTags.length )` 里面的 creator 应该是 obj，由于手滑，不小心写错了。
+这行`if (obj.expertTags && creator.expertTags.length )` 里面的 `creator` 应该是 `obj`，由于手滑，不小心写错了。
 
-对于上面这种情况，lint 工具无法检测出来，因为 creator 恰好同时也是一个变量，这是一个纯粹的逻辑错误。
+对于上面这种情况，`lint` 工具无法检测出来，因为 `creator` 恰好同时也是一个变量，这是一个纯粹的逻辑错误。
 
 事情的结果就是我们紧急修复了 bug，官方道歉，相关开发人员得到了队友的处罚，至此告一段落。但是有个声音一直在我心中回响 **如何避免这种事故再次发生** 。 对于这种错误，堵是堵不住的，那么我们就应该思考设计一种兜底机制，能够隔离这种错误，使页面部分报错，而不是整个网页挂掉。
 
 ## ErrorBoundary
 
-从 React 16 开始,引入了 ErrorBoundary 组件，它可以捕获它的**子组件**中产生的错误，记录错误日志，并展示降级内容。
+从 React 16 开始,引入了 ErrorBoundary 组件，它可以捕获它的**子组件**中产生的错误，记录错误日志，并展示降级内容,具体[官网地址](https://reactjs.org/docs/error-boundaries.html)。
 
 > Error boundaries are React components that **catch JavaScript errors anywhere in their child component tree, log those errors, and display a fallback UI** instead of the component tree that crashed
 
@@ -46,7 +46,7 @@
 
 ### 如何创建一个 ErrorBoundary Component
 
-这个非常简单，就是在 React.Component 组件里面添加`static getDerivedStateFromError()`或者`componentDidCatch()`。前者在错误发生时进行降级处理，后面一个函数主要是做日志记录，<span id = "jump">官方代码</span>如下
+只要在 `React.Component` 组件里面添加`static getDerivedStateFromError()`或者`componentDidCatch()`即可。前者在错误发生时进行降级处理，后面一个函数主要是做日志记录，<span id = "jump">官方代码</span>如下
 
 ```js
 class ErrorBoundary extends React.Component {
@@ -87,7 +87,7 @@ class ErrorBoundary extends React.Component {
 
 ### ErrorBoundary 的普遍用法。
 
-看到 ErrorBoundary 的使用方法之后，大部分团队的用法是写一个 HOC，然后包装一下,比如下面 scratch 的用法
+看到 `ErrorBoundary` 的使用方法之后，大部分团队的用法是写一个`HOC`，然后包装一下,比如下面 `scratch` 的用法
 
 ```js
 export default errorBoundaryHOC("Blocks")(
@@ -117,16 +117,20 @@ export * as name1 from …
 
 ## 青铜时代-BabelPlugin
 
-在碰到上面 HOC 的问题之后，我们把目光锁定在能否直接在子组件包裹一个 ErrorBoundary 组件，流程示意图如下：
+在碰到上面 `HOC` 的问题之后，我们把目光锁定在能否直接在子组件包裹一个 `ErrorBoundary` 组件，流程示意图如下：
 
 <img src ="https://p1.music.126.net/CmbPWqDH3xZ198OFWb6JBQ==/109951164546488873.png" height="200" width="100%">
 
 简单思路如下：
 
-1. 判断是否是 React16 版本
+1. 判断是否是 `React16` 版本
 2. 读取配置文件
-3. 检测是否已经包裹了 ErrorBoundary 组件。 如果没有,走 patch 流程。如果有，根据 force 标签判断是否重新包裹。
-4. path 流程：a.先引入 ErrorBoundary 组件 b.wrap children
+3. 检测是否已经包裹了 `ErrorBoundary` 组件。 如果没有,走 patch 流程。如果有，根据 `force` 标签判断是否重新包裹。
+4. path 流程：
+
+   > a.先引入 `ErrorBoundary` 组件
+
+   > b. wrap children
 
 配置文件如下（.catch-react-error-config.json）：
 
@@ -141,7 +145,7 @@ export * as name1 from …
 }
 ```
 
-源码文件如下
+patch 前源代码
 
 ```js
 import React, { Component } from "react";
@@ -172,10 +176,13 @@ class App extends Component {
 ```
 
 可以看到头部多了
-`import ServerErrorBoundary from '$components/ServerErrorBoundary'`然后整个组件也被`ServerErrorBoundary`包裹，
+`import ServerErrorBoundary from '$components/ServerErrorBoundary'`
+
+然后整个组件也被`ServerErrorBoundary`包裹，
+
 `isCatchReactError`用来标记位，主要是下次 patch 的时候根据这个标记位做对应的更新，防止被引入多次。
 
-其思路主要通过[babel plugin](https://github.com/jamiebuilds/babel-handbook/blob/master/translations/en/plugin-handbook.md)的方式，在代码编译阶段自动导入 ErrorBoundary 并批量组件包裹,核心代码：
+其思路主要通过[babel plugin](https://github.com/jamiebuilds/babel-handbook/blob/master/translations/en/plugin-handbook.md)，在代码编译阶段自动导入 ErrorBoundary 并批量组件包裹,核心代码：
 
 ```js
 const babelTemplate = require("@babel/template");
@@ -224,19 +231,21 @@ const visitor = {
 };
 ```
 
-这个方法的思路主要是给现有的代码包裹了配置文件里面的`sentinel.imports`。只是这个`imports`刚好是一个`errorboundary`，除了这个，也可以注入其他比如 imports 是一个`LogComponent`等。
+这个方法的思路主要是给现有的代码包裹了配置文件里面的`sentinel.imports`语句。
+
+只是这个`imports`刚好是一个`errorboundary`，除了这个，也可以注入其他比如 `imports` 是一个`LogComponent`等。
 
 完整 github 代码实现[这里](https://github.com/xff1874/react-error-sentinel)
 
-虽然实现了错误的捕获和兜底方案，但是非常复杂，用起来也麻烦，要配置`webpack`和`.catch-react-error-config.json`还要运行脚手架，效果不令人满意。
+虽然这种方式实现了错误的捕获和兜底方案，但是非常复杂，用起来也麻烦，要配置`webpack`和`.catch-react-error-config.json`还要运行脚手架，效果不令人满意。
 
 ## 黄金时代-TS Decorator
 
-在上述方案出来之后，很长时间都找不到一个有效的方案，要么太难用（babelplugin）,要么对于源码的改动太大（hoc）,到底有没有一种方法能够两者结合，直到遇到了 TS decorator。
+在上述方案出来之后，很长时间都找不到一个优雅的方案，要么太难用（babelplugin）,要么对于源码的改动太大（hoc）,到底有没有一种方法能够两者结合，直到遇到了 `TS decorator`。
 
 TS 里面提供了类装饰器，方法装饰器，访问器装饰器，属性装饰器，参数装饰器，具体关于装饰器见[官网](https://www.tslang.cn/docs/handbook/decorators.html).
 
-其中的类装饰器让人眼前一亮，设计代码如下
+我们使用了类装饰器，错误捕获设计如下
 
 ```jsx
 @catchreacterror()
@@ -249,7 +258,7 @@ class Test extends React.Component {
 
 `catchreacterror`函数的参数为`ErrorBoundary`组件,用户可以使用自定义的`ErrorBoundary`，如果不传递则使用默认的`DefaultErrorBoundary`组件；
 
-返回值为一个典型的`HOC`，使用`ErrorBoundary`包裹原组件，并传递`ref`。
+`catchreacterror` 核心代码如下
 
 ```js
 import React, { Component, forwardRef } from "react";
@@ -265,18 +274,14 @@ const catchreacterror = (Boundary = DefaultErrorBoundary) => InnerComponent => {
       );
     }
   }
-
-  return forwardRef((props, ref) => (
-    <WrapperComponent forwardedRef={ref} {...props} />
-  ));
 };
 ```
 
+返回值为一个 HOC，使用`ErrorBoundary`包裹子组件。
+
 ### 服务端渲染错误捕获
 
-现在主流的项目都会采用服务端渲染的方式，那么如果在服务端渲染的过程中发生了错误，不仅可能导致首屏白屏，还可能导致整体静态 HTML 的生成(包括相关 JS,CSS，服务端数据的插入等)，进而客户端 re-render 的时候也会白屏，所以我们必须寻找一个能够在同构应用中都可以处理错误的方式。
-
-前文介绍`ErrorBoundary`并不捕获服务端渲染错误，所以这块我们用`try/catch`做了包裹：
+对于服务端渲染，官方的`ErrorBoundary`并没有支持，但是现在很多程序都用了这个方案，包括我们自己的项目。所以这块我们用`try/catch`做了包裹：
 
 1. 先判断是否是服务端`is_server`
 
