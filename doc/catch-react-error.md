@@ -46,7 +46,7 @@
 
 ### 如何创建一个 ErrorBoundary Component
 
-这个非常简单，就是在 React.Component 组件里面添加`static getDerivedStateFromError()`或者`componentDidCatch()`。前者在错误发生时进行降级处理，后面一个函数主要是做日志记录，官方代码如下
+这个非常简单，就是在 React.Component 组件里面添加`static getDerivedStateFromError()`或者`componentDidCatch()`。前者在错误发生时进行降级处理，后面一个函数主要是做日志记录，<span id = "jump">官方代码</span>如下
 
 ```js
 class ErrorBoundary extends React.Component {
@@ -276,69 +276,31 @@ const catchreacterror = (Boundary = DefaultErrorBoundary) => InnerComponent => {
 
 现在主流的项目都会采用服务端渲染的方式，那么如果在服务端渲染的过程中发生了错误，不仅可能导致首屏白屏，还可能导致整体静态 HTML 的生成(包括相关 JS,CSS，服务端数据的插入等)，进而客户端 re-render 的时候也会白屏，所以我们必须寻找一个能够在同构应用中都可以处理错误的方式。
 
-先看一下服务端渲染的原理，通过`react-dom/server`提供的`renderToStaticMarkup`方法，在 node.js 端把 React 组件转换为 HTML，然后把 HTML 直接发送到客户端，所以我们在服务端渲染的时候想要捕获 React 组件的错误，核心就是使用`try-catch`包裹处理`renderToStaticMarkup`方法了：
+前文介绍`ErrorBoundary`并不捕获服务端渲染错误，所以这块我们用`try/catch`做了包裹：
+
+1. 先判断是否是服务端`is_server`
 
 ```js
-function serverMarkup(props) {
-  const element = props.children;
-  try {
-    const __html = renderToStaticMarkup(element);
-    return <div dangerouslySetInnerHTML={{ __html }} />;
-  } catch (e) {
-    return <div>Something is Wrong</div>;
-  }
+function is_server() {
+  return !(typeof window !== "undefined" && window.document);
 }
 ```
 
-所以`DefaultErrorBoundary`只需要多处理 server 端的代码，即可捕获两端的错误:
+2. 包裹
 
 ```js
-import React from "react";
-import { renderToStaticMarkup } from "react-dom/server";
+if (is_server()) {
+  const originalRender = InnerComponent.prototype.render;
 
-export class DefaultErrorBoundary extends React.Component {
-  state = {
-    hasError: false
-  };
-
-  static getDerivedStateFromError(err) {
-    return {
-      hasError: true,
-      err
-    };
-  }
-
-  componentDidCatch(err, info) {
-    console.log(err, info);
-  }
-
-  serverMarkup(props) {
-    const element = props.children;
+  InnerComponent.prototype.render = function() {
     try {
-      const __html = renderToStaticMarkup(element);
-      return <div dangerouslySetInnerHTML={{ __html }} />;
-    } catch (e) {
+      return originalRender.apply(this, arguments);
+    } catch (error) {
+      console.error(error);
       return <div>Something is Wrong</div>;
     }
-  }
-
-  is_server() {
-    return !(typeof window !== "undefined" && window.document);
-  }
-
-  render() {
-    if (this.is_server()) {
-      return this.serverMarkup(this.props);
-    }
-
-    if (this.state.hasError) {
-      return <div>Something is Wrong</div>;
-    }
-
-    return this.props.children;
-  }
+  };
 }
-export default DefaultErrorBoundary;
 ```
 
 ### catch-react-error 使用方式
@@ -389,44 +351,32 @@ class Test extends React.Component {
 
 自定义的`CustomErrorBoundary`组件。默认会用框架提供的`DefaultErrorBoundary`组件。其原理为：客户端渲染会用 React 16 的[Error Boundary](https://reactjs.org/blog/2017/07/26/error-handling-in-react-16.html)的相关函数来处理错误，服务端用`try catch`来捕获 render 的错误。
 
-#### 5.如何编写 CustomErrorBoundary
+#### 5.使用@catchreacterror 处理 FunctionComponent
 
-拷贝下面代码，修改成自己所需。
+上面是对于`ClassComponent`做的处理，但是有些人喜欢用函数组件，这里也提供使用方法,如下。
 
 ```js
-class CustomErrorBoundary extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { hasError: false };
-  }
+const Content = (props, b, c) => {
+  return <div>{props.x.length}</div>;
+};
 
-  componentDidCatch(error, info) {
-    this.setState({ hasError: true });
-  }
+const SafeContent = catchreacterror(DefaultErrorBoundary)(Content);
 
-  is_server() {
-    return !(typeof window !== "undefined" && window.document);
-  }
-  handleServer(props) {
-    const element = props.children;
-
-    try {
-      return element;
-    } catch (e) {
-      return "Something went wrong";
-    }
-  }
-
-  render() {
-    if (this.is_server()) {
-      return this.handleServer(this.props);
-    }
-    if (this.state.hasError) {
-      return <h1>Something went wrong.</h1>;
-    }
-    return this.props.children;
-  }
+function App() {
+  return (
+    <div className="App">
+      <header className="App-header">
+        <h1>这是正常展示内容</h1>
+      </header>
+      <SafeContent/>
+  );
 }
+
+
 ```
+
+#### 6.如何创建自己所需的`Custom ErrorBoundary`
+
+参考上面 [如何创建一个 ErrorBoundary Component](#jump),然后改为自己所需即可
 
 完整的 github 代码在此[catch-react-error](https://github.com/x-orpheus/catch-react-error)

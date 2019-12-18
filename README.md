@@ -52,7 +52,30 @@ class Test extends React.Component {
 
 自定义的`CustomErrorBoundary`组件。默认会用框架提供的`DefaultErrorBoundary`组件。其原理为：客户端渲染会用 React 16 的[Error Boundary](https://reactjs.org/blog/2017/07/26/error-handling-in-react-16.html)的相关函数来处理错误，服务端用`try catch`来捕获 render 的错误。
 
-#### 5.如何编写 CustomErrorBoundary
+#### 5.使用@catchreacterror 处理 FunctionComponent
+
+上面是对于`ClassComponent`做的处理，但是有些人喜欢用函数组件，这里也提供使用方法,如下。
+
+```js
+const Content = (props, b, c) => {
+  return <div>{props.x.length}</div>;
+};
+
+const SafeContent = catchreacterror(DefaultErrorBoundary)(Content);
+
+function App() {
+  return (
+    <div className="App">
+      <header className="App-header">
+        <h1>这是正常展示内容</h1>
+      </header>
+      <SafeContent/>
+  );
+}
+
+```
+
+#### 6.如何编写 CustomErrorBoundary
 
 拷贝下面代码，修改成自己所需。
 
@@ -63,31 +86,33 @@ class CustomErrorBoundary extends React.Component {
     this.state = { hasError: false };
   }
 
-  componentDidCatch(error, info) {
-    this.setState({ hasError: true });
+  static getDerivedStateFromError(error) {
+    // Update state so the next render will show the fallback UI.
+    return { hasError: true };
   }
 
-  is_server() {
-    return !(typeof window !== "undefined" && window.document);
-  }
-  handleServer(props) {
-    const element = props.children;
-
-    try {
-      return element;
-    } catch (e) {
-      return "Something went wrong";
-    }
+  componentDidCatch(error, errorInfo) {
+    // You can also log the error to an error reporting service
+    logErrorToMyService(error, errorInfo);
   }
 
   render() {
-    if (this.is_server()) {
-      return this.handleServer(this.props);
-    }
     if (this.state.hasError) {
+      // You can render any custom fallback UI
       return <h1>Something went wrong.</h1>;
     }
+
     return this.props.children;
   }
 }
+```
+
+### 7. demo
+
+```
+cd example-server
+
+npm install
+
+npm run dev
 ```
