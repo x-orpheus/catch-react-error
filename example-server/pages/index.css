@@ -1,0 +1,4 @@
+/* 仅仅是为了，隐藏框架自带的开发环境error overlay */
+iframe {
+  display: none !important;
+}
