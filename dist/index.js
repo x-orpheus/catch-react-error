@@ -10,7 +10,7 @@ var _catchReactError = _interopRequireDefault(require("./catch-react-error"));
 
 var _DefaultErrorBoundary = require("./components/DefaultErrorBoundary");
 
-Object.keys(_DefaultErrorBoundary).forEach(function (key) {
+Object.keys(_DefaultErrorBoundary).forEach(function(key) {
   if (key === "default" || key === "__esModule") return;
   if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
   Object.defineProperty(exports, key, {
@@ -23,7 +23,7 @@ Object.keys(_DefaultErrorBoundary).forEach(function (key) {
 
 var _propsInterface = require("./interface/propsInterface");
 
-Object.keys(_propsInterface).forEach(function (key) {
+Object.keys(_propsInterface).forEach(function(key) {
   if (key === "default" || key === "__esModule") return;
   if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
   Object.defineProperty(exports, key, {
@@ -34,7 +34,9 @@ Object.keys(_propsInterface).forEach(function (key) {
   });
 });
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+function _interopRequireDefault(obj) {
+  return obj && obj.__esModule ? obj : { default: obj };
+}
 
 var _default = _catchReactError["default"];
 exports["default"] = _default;

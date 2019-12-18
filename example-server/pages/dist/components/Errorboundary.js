@@ -169,9 +169,10 @@ var DefaultErrorBoundary =
 
       _this = _possibleConstructorReturn(
         this,
-        (_getPrototypeOf2 = _getPrototypeOf(
-          DefaultErrorBoundary
-        )).call.apply(_getPrototypeOf2, [this].concat(args))
+        (_getPrototypeOf2 = _getPrototypeOf(DefaultErrorBoundary)).call.apply(
+          _getPrototypeOf2,
+          [this].concat(args)
+        )
       );
 
       _defineProperty(_assertThisInitialized(_this), "state", {
