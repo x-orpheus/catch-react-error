@@ -9,6 +9,7 @@ function App() {
         <h1>这是正常展示内容</h1>
       </header>
       <Test></Test>
+      <SafeContent />
     </div>
   );
 }
