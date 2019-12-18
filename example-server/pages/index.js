@@ -1,5 +1,5 @@
 import React from "react";
-import catchreacterror, { IsomorphicErrorBoundary } from "./dist";
+import catchreacterror, { DefaultErrorBoundary } from "./dist";
 import "./index.css";
 
 function App() {
@@ -58,7 +58,7 @@ const Content = (props, b, c) => {
   return <div>{props.x.length}</div>;
 };
 
-const SafeContent = catchreacterror(IsomorphicErrorBoundary)(Content);
+const SafeContent = catchreacterror(DefaultErrorBoundary)(Content);
 
 const Foo = (a, b, c) => {
   return <p>Foo</p>;

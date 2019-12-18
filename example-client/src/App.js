@@ -1,5 +1,5 @@
 import React from "react";
-import catchreacterror, { IsomorphicErrorBoundary } from "./dist";
+import catchreacterror, { DefaultErrorBoundary } from "./dist";
 
 function App() {
   return (
@@ -35,7 +35,7 @@ class Test extends React.Component {
     console.log(this.buttonRef.current.hello());
   }
 }
-@catchreacterror(IsomorphicErrorBoundary)
+@catchreacterror(DefaultErrorBoundary)
 class Button extends React.Component {
   hello() {
     console.log("hello");
@@ -59,6 +59,6 @@ const Label = ({ list }) => {
 
 const Content = ({ x }) => <div>{x.length}</div>;
 
-const SafeContent = catchreacterror(IsomorphicErrorBoundary)(Content);
+const SafeContent = catchreacterror(DefaultErrorBoundary)(Content);
 
 export default App;

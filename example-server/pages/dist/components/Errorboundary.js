@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports["default"] = exports.IsomorphicErrorBoundary = void 0;
+exports["default"] = exports.DefaultErrorBoundary = void 0;
 
 var React = _interopRequireWildcard(require("react"));
 
@@ -147,17 +147,17 @@ function _defineProperty(obj, key, value) {
   return obj;
 }
 
-var IsomorphicErrorBoundary =
+var DefaultErrorBoundary =
   /*#__PURE__*/
   (function(_React$Component) {
-    _inherits(IsomorphicErrorBoundary, _React$Component);
+    _inherits(DefaultErrorBoundary, _React$Component);
 
-    function IsomorphicErrorBoundary() {
+    function DefaultErrorBoundary() {
       var _getPrototypeOf2;
 
       var _this;
 
-      _classCallCheck(this, IsomorphicErrorBoundary);
+      _classCallCheck(this, DefaultErrorBoundary);
 
       for (
         var _len = arguments.length, args = new Array(_len), _key = 0;
@@ -170,7 +170,7 @@ var IsomorphicErrorBoundary =
       _this = _possibleConstructorReturn(
         this,
         (_getPrototypeOf2 = _getPrototypeOf(
-          IsomorphicErrorBoundary
+          DefaultErrorBoundary
         )).call.apply(_getPrototypeOf2, [this].concat(args))
       );
 
@@ -182,7 +182,7 @@ var IsomorphicErrorBoundary =
     }
 
     _createClass(
-      IsomorphicErrorBoundary,
+      DefaultErrorBoundary,
       [
         {
           key: "componentDidCatch",
@@ -217,9 +217,9 @@ var IsomorphicErrorBoundary =
       ]
     );
 
-    return IsomorphicErrorBoundary;
+    return DefaultErrorBoundary;
   })(React.Component);
 
-exports.IsomorphicErrorBoundary = IsomorphicErrorBoundary;
-var _default = IsomorphicErrorBoundary;
+exports.DefaultErrorBoundary = DefaultErrorBoundary;
+var _default = DefaultErrorBoundary;
 exports["default"] = _default;

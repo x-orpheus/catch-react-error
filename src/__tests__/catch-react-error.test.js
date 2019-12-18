@@ -1,7 +1,7 @@
 import React from 'react';
 import Enzyme, { mount } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
-import catchreacterror, { IsomorphicErrorBoundary } from '../../dist';
+import catchreacterror, { DefaultErrorBoundary } from '../../dist';
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -24,13 +24,13 @@ describe('catch-react-error', () => {
     }
     it('Renders the child component if there is no error', () => {
         const wrapper = mount(
-            <IsomorphicErrorBoundary>
+            <DefaultErrorBoundary>
                 <User
                     name="Harry"
                     address="hangzhou"
                     other={{ email: 'hello@163.com' }}
                 />
-            </IsomorphicErrorBoundary>
+            </DefaultErrorBoundary>
         );
 
         const UserWithErrorBoundary = catchreacterror()(User);
@@ -54,7 +54,7 @@ describe('catch-react-error', () => {
         ).toBeTruthy();
 
         expect(
-            wrapperWithErrorBoundary.find(IsomorphicErrorBoundary).instance()
+            wrapperWithErrorBoundary.find(DefaultErrorBoundary).instance()
                 .state.hasError
         ).toBeFalsy();
         expect(
@@ -70,9 +70,9 @@ describe('catch-react-error', () => {
 
     it('Renders the fallback if there has an error', () => {
         const wrapper = mount(
-            <IsomorphicErrorBoundary>
+            <DefaultErrorBoundary>
                 <User name="Harry" address="hangzhou" />
-            </IsomorphicErrorBoundary>
+            </DefaultErrorBoundary>
         );
 
         const UserWithErrorBoundary = catchreacterror()(User);
@@ -84,7 +84,7 @@ describe('catch-react-error', () => {
         expect(wrapper.contains(<div>Something is Wrong</div>)).toBeTruthy();
 
         expect(
-            wrapperWithErrorBoundary.find(IsomorphicErrorBoundary).instance()
+            wrapperWithErrorBoundary.find(DefaultErrorBoundary).instance()
                 .state.hasError
         ).toBeTruthy();
         expect(
@@ -96,9 +96,9 @@ describe('catch-react-error', () => {
 
     it('Renders the fallback if there has an error', () => {
         const wrapper = mount(
-            <IsomorphicErrorBoundary>
+            <DefaultErrorBoundary>
                 <User name="Harry" address="hangzhou" />
-            </IsomorphicErrorBoundary>
+            </DefaultErrorBoundary>
         );
 
         const UserWithErrorBoundary = catchreacterror()(User);
@@ -110,7 +110,7 @@ describe('catch-react-error', () => {
         expect(wrapper.contains(<div>Something is Wrong</div>)).toBeTruthy();
 
         expect(
-            wrapperWithErrorBoundary.find(IsomorphicErrorBoundary).instance()
+            wrapperWithErrorBoundary.find(DefaultErrorBoundary).instance()
                 .state.hasError
         ).toBeTruthy();
         expect(
@@ -120,7 +120,7 @@ describe('catch-react-error', () => {
         ).toBeTruthy();
     });
 
-    it('Use default IsomorphicErrorBoundary when the ErrorBoundary is not React Class', () => {
+    it('Use default DefaultErrorBoundary when the ErrorBoundary is not React Class', () => {
         const ErrorBoundary = () => <div>some ivited ErrorBoundary</div>;
 
         const UserWithErrorBoundary = catchreacterror(ErrorBoundary)(User);
@@ -129,7 +129,7 @@ describe('catch-react-error', () => {
         );
 
         expect(
-            wrapperWithErrorBoundary.find(IsomorphicErrorBoundary).instance()
+            wrapperWithErrorBoundary.find(DefaultErrorBoundary).instance()
                 .state.hasError
         ).toBeTruthy();
         expect(
@@ -139,7 +139,7 @@ describe('catch-react-error', () => {
         ).toBeTruthy();
     });
 
-    it("Use default IsomorphicErrorBoundary when the ErrorBoundary doesn't have componentDidCatch lifecycle", () => {
+    it("Use default DefaultErrorBoundary when the ErrorBoundary doesn't have componentDidCatch lifecycle", () => {
         class ErrorBoundaryWithoutComponentDidCatch extends React.Component {
             render() {
                 return 'ErrorBoundary';
@@ -154,7 +154,7 @@ describe('catch-react-error', () => {
         );
 
         expect(
-            wrapperWithErrorBoundary.find(IsomorphicErrorBoundary).instance()
+            wrapperWithErrorBoundary.find(DefaultErrorBoundary).instance()
                 .state.hasError
         ).toBeTruthy();
         expect(

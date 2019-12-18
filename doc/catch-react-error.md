@@ -247,16 +247,14 @@ class Test extends React.Component {
 }
 ```
 
-`catchreacterror`函数的参数为`ErrorBoundary`组件,用户可以使用自定义的`ErrorBoundary`，如果不传递则使用默认的`IsomorphicErrorBoundary`组件；
+`catchreacterror`函数的参数为`ErrorBoundary`组件,用户可以使用自定义的`ErrorBoundary`，如果不传递则使用默认的`DefaultErrorBoundary`组件；
 
 返回值为一个典型的`HOC`，使用`ErrorBoundary`包裹原组件，并传递`ref`。
 
 ```js
 import React, { Component, forwardRef } from "react";
 
-const catchreacterror = (
-  Boundary = IsomorphicErrorBoundary
-) => InnerComponent => {
+const catchreacterror = (Boundary = DefaultErrorBoundary) => InnerComponent => {
   class WrapperComponent extends Component {
     render() {
       const { forwardedRef } = this.props;
@@ -292,13 +290,13 @@ function serverMarkup(props) {
 }
 ```
 
-所以`IsomorphicErrorBoundary`只需要多处理 server 端的代码，即可捕获两端的错误:
+所以`DefaultErrorBoundary`只需要多处理 server 端的代码，即可捕获两端的错误:
 
 ```js
 import React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 
-export class IsomorphicErrorBoundary extends React.Component {
+export class DefaultErrorBoundary extends React.Component {
   state = {
     hasError: false
   };
@@ -340,7 +338,7 @@ export class IsomorphicErrorBoundary extends React.Component {
     return this.props.children;
   }
 }
-export default IsomorphicErrorBoundary;
+export default DefaultErrorBoundary;
 ```
 
 ### catch-react-error 使用方式
@@ -387,9 +385,9 @@ class Test extends React.Component {
 }
 ```
 
-`catchreacterror`函数接受一个参数:ErrorBoundary(不提供则默认采用`IsomorphicErrorBoundary`)
+`catchreacterror`函数接受一个参数:ErrorBoundary(不提供则默认采用`DefaultErrorBoundary`)
 
-自定义的`CustomErrorBoundary`组件。默认会用框架提供的`IsomorphicErrorBoundary`组件。其原理为：客户端渲染会用 React 16 的[Error Boundary](https://reactjs.org/blog/2017/07/26/error-handling-in-react-16.html)的相关函数来处理错误，服务端用`try catch`来捕获 render 的错误。
+自定义的`CustomErrorBoundary`组件。默认会用框架提供的`DefaultErrorBoundary`组件。其原理为：客户端渲染会用 React 16 的[Error Boundary](https://reactjs.org/blog/2017/07/26/error-handling-in-react-16.html)的相关函数来处理错误，服务端用`try catch`来捕获 render 的错误。
 
 #### 5.如何编写 CustomErrorBoundary
 

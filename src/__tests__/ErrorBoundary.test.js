@@ -3,7 +3,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import Enzyme, { shallow, mount } from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
 
-import { IsomorphicErrorBoundary, serverMarkup } from "../../dist";
+import { DefaultErrorBoundary, serverMarkup } from "../../dist";
 import { is_server } from "../../dist/util";
 
 Enzyme.configure({ adapter: new Adapter() });
@@ -19,9 +19,9 @@ describe("When no JS errors are caught in a child component", () => {
 
   beforeAll(() => {
     wrapper = shallow(
-      <IsomorphicErrorBoundary>
+      <DefaultErrorBoundary>
         <h1>wassup</h1>
-      </IsomorphicErrorBoundary>
+      </DefaultErrorBoundary>
     );
   });
 
@@ -45,9 +45,9 @@ describe("When a JS error is caught in a child component", () => {
       return <div>Error</div>;
     };
     wrapper = mount(
-      <IsomorphicErrorBoundary>
+      <DefaultErrorBoundary>
         <ProblemChild />
-      </IsomorphicErrorBoundary>
+      </DefaultErrorBoundary>
     );
   });
 

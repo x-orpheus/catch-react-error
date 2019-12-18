@@ -8,7 +8,7 @@ exports.isComponentClass = isComponentClass;
 exports["default"] = void 0;
 
 function is_server() {
-  return !(typeof window !== "undefined" && window.document);
+  return !(typeof window !== 'undefined' && window.document);
 }
 
 function isComponentClass(Component) {

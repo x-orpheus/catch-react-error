@@ -1,20 +1,20 @@
 import * as React from 'react';
 import { Component, ComponentClass, FunctionComponent, forwardRef, Ref, ReactNode } from 'react';
-import IsomorphicErrorBoundary from './components/Errorboundary'
+import DefaultErrorBoundary from './components/DefaultErrorBoundary'
 import { ErrorBoundaryProps, ErrorBoundaryState } from './interface/propsInterface'
 import { is_server, isComponentClass } from './util/index';
 
 const catchreacterror =
-    (Boundary: ComponentClass<ErrorBoundaryProps, ErrorBoundaryState> = IsomorphicErrorBoundary) =>
+    (Boundary: ComponentClass<ErrorBoundaryProps, ErrorBoundaryState> = DefaultErrorBoundary) =>
         (InnerComponent: ComponentClass | FunctionComponent) => {
 
             if (Boundary && !Component.prototype.isPrototypeOf(Boundary.prototype)) {
                 console.warn("Catch-React-Error: The <ErrorBoundary /> component doesn't extend React.Component.  ErrorBoundary must extends React.Component");
-                Boundary = IsomorphicErrorBoundary
+                Boundary = DefaultErrorBoundary
             }
             if (Boundary && !Boundary.prototype.componentDidCatch) {
                 console.warn("Catch-React-Error: The <ErrorBoundary /> component doesn't have componentDidCatch lifecycle.  ErrorBoundary must have componentDidCatch lifecycle");
-                Boundary = IsomorphicErrorBoundary
+                Boundary = DefaultErrorBoundary
             }
 
             if (isComponentClass(InnerComponent)) {

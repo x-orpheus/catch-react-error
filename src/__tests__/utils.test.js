@@ -2,7 +2,7 @@
  * @jest-environment node
  */
 import React from "react";
-import { IsomorphicErrorBoundary } from "../../dist";
+import { DefaultErrorBoundary } from "../../dist";
 import { is_server, isComponentClass } from "../../dist/util";
 import Enzyme, { shallow, mount } from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
@@ -43,9 +43,9 @@ describe("When no JS errors are caught in a child component", () => {
   let wrapper;
   beforeAll(() => {
     wrapper = shallow(
-      <IsomorphicErrorBoundary>
+      <DefaultErrorBoundary>
         <h1>no problem children</h1>
-      </IsomorphicErrorBoundary>
+      </DefaultErrorBoundary>
     );
   });
 
