@@ -1,6 +1,6 @@
 # catch-react-error
 
-> 此项目为云音乐营收组稳定保证工程的前端产出，参与者[章伟东](https://github.com/xff1874)和[赵祥涛](https://sylvenas.github.io/)
+> 此项目为云音乐营收组稳定性工程的前端部分，参与者[章伟东](https://github.com/xff1874)和[赵祥涛](https://sylvenas.github.io/)
 
 ## 一个 bug 引发的血案
 
@@ -29,7 +29,7 @@
 
 对于上面这种情况，`lint` 工具无法检测出来，因为 `creator` 恰好同时也是一个变量，这是一个纯粹的逻辑错误。
 
-事情的结果就是我们紧急修复了 bug，官方道歉，相关开发人员得到了队友的处罚，至此告一段落。但是有个声音一直在我心中回响 **如何避免这种事故再次发生** 。 对于这种错误，堵是堵不住的，那么我们就应该思考设计一种兜底机制，能够隔离这种错误，使页面部分报错，而不是整个网页挂掉。
+处理结果就是我们紧急修复了 bug，官方道歉，相关开发人员得到了对应的处罚。事情虽然到此为止，但是有个声音一直在我心中回响 **如何避免这种事故再次发生**。 对于这种错误，堵是堵不住的，那么我们就应该思考设计一种兜底机制，能够隔离这种错误，使页面部分报错，而不是整个网页挂掉。
 
 ## ErrorBoundary
 
@@ -77,7 +77,7 @@ class ErrorBoundary extends React.Component {
 ```
 
 可以看到`getDerivedStateFromError`捕获了错误，然后设置了`hasError`变量，`render`函数里面根据变量的值返回降级的处理`<h1>Something went wrong.</h1>`。
-至此一个 ErrorBoundary 组件已经定义好了，使用时只要包裹一个子组件即可。
+至此一个 `ErrorBoundary` 组件已经定义好了，使用时只要包裹一个子组件即可。
 
 ```js
 <ErrorBoundary>
