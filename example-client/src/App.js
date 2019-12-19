@@ -12,6 +12,7 @@ function App() {
   );
 }
 
+@catchreacterror()
 class Test extends React.Component {
   constructor() {
     super();
@@ -45,6 +46,7 @@ class Button extends React.Component {
   }
 
   render() {
+    console.log(emptyObj.a.b);
     return <button onClick={this.handleClick}>click me</button>;
   }
 
