@@ -27,7 +27,7 @@ npm run dev
 ## 1.安装 catch-react-error
 
 ```sh
-npm  install catch-react-error
+npm  install catch-react-error --save
 ```
 
 ## 2.安装 ES7 Decorator babel plugin
@@ -66,9 +66,9 @@ class Test extends React.Component {
 }
 ```
 
-`catchreacterror`函数接受一个参数:ErrorBoundary(不提供则默认采用`DefaultErrorBoundary`)
+`catchreacterror`函数接受一个参数:ErrorBoundary(默认采用`DefaultErrorBoundary`)
 
-自定义的`CustomErrorBoundary`组件。默认会用框架提供的`DefaultErrorBoundary`组件。其原理为：客户端渲染会用 React 16 的[Error Boundary](https://reactjs.org/blog/2017/07/26/error-handling-in-react-16.html)的相关函数来处理错误，服务端用`try catch`来捕获 render 的错误。
+其原理为：客户端渲染会用 React 16 的[Error Boundary](https://reactjs.org/blog/2017/07/26/error-handling-in-react-16.html)的相关函数来处理错误，服务端用`try catch`来捕获 render 的错误。
 
 ## 5.使用@catchreacterror 处理 FunctionComponent
 
