@@ -1,12 +1,14 @@
-### 简介
+# catch-react-error
 
-[English](xxx.README-en.md)
+[![npm](https://img.shields.io/npm/v/catch-react-error?style=flat-square)](https://www.npmjs.com/package/catch-react-error)
 
-使用 ES7 的`Decorator`配合`React ErrorBoundary`捕获 React 生命周期期间发生的错误
+# 简介
 
-### example
+使用 TS 的`Decorator`配合`React ErrorBoundary`捕获 React 生命周期期间发生的错误
 
-#### client side server
+# demo
+
+## client side server
 
 ```sh
 cd example-client
@@ -20,15 +22,15 @@ cd example-server
 npm run dev
 ```
 
-### 使用方式
+# How to use
 
-#### 1.安装 catch-react-error
+## 1.安装 catch-react-error
 
 ```sh
-nenpm install catch-react-error
+npm  install catch-react-error
 ```
 
-#### 2.安装 ES7 Decorator babel plugin
+## 2.安装 ES7 Decorator babel plugin
 
 ```sh
 npm install --save-dev @babel/plugin-proposal-decorators
@@ -47,13 +49,13 @@ npm install --save-dev @babel/plugin-proposal-class-properties
 }
 ```
 
-#### 3.导入 catch-react-error
+## 3.导入 catch-react-error
 
 ```jsx
 import catchreacterror from "catch-react-error";
 ```
 
-#### 4.使用@catchreacterror decorator
+## 4.使用@catchreacterror decorator
 
 ```jsx
 @catchreacterror()
@@ -68,7 +70,7 @@ class Test extends React.Component {
 
 自定义的`CustomErrorBoundary`组件。默认会用框架提供的`DefaultErrorBoundary`组件。其原理为：客户端渲染会用 React 16 的[Error Boundary](https://reactjs.org/blog/2017/07/26/error-handling-in-react-16.html)的相关函数来处理错误，服务端用`try catch`来捕获 render 的错误。
 
-#### 5.使用@catchreacterror 处理 FunctionComponent
+## 5.使用@catchreacterror 处理 FunctionComponent
 
 上面是对于`ClassComponent`做的处理，但是有些人喜欢用函数组件，这里也提供使用方法,如下。
 
@@ -91,7 +93,7 @@ function App() {
 
 ```
 
-#### 6.如何编写 CustomErrorBoundary
+## 6.如何编写 CustomErrorBoundary
 
 拷贝下面代码，修改成自己所需。
 
@@ -122,14 +124,4 @@ class CustomErrorBoundary extends React.Component {
     return this.props.children;
   }
 }
-```
-
-### 7. demo
-
-```
-cd example-server
-
-npm install
-
-npm run dev
 ```
