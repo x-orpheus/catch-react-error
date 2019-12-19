@@ -1,5 +1,6 @@
 import React from "react";
-import catchreacterror, { DefaultErrorBoundary } from "./dist";
+// import catchreacterror, { DefaultErrorBoundary } from "./dist";
+import catchreacterror, { DefaultErrorBoundary } from "catch-react-error";
 import "./index.css";
 
 function App() {
@@ -46,7 +47,7 @@ class Button extends React.Component {
   }
   render() {
     const emptyObj = {};
-    // console.log(emptyObj.a.b);
+    console.log(emptyObj.a.b);
     return <button onClick={this.click}>click me</button>;
   }
 }
