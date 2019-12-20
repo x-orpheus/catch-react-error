@@ -59,7 +59,7 @@
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.16.0",
     "eslint-plugin-react-hooks": "^2.2.0",
-    "husky": "^3.0.9",
+    "husky": "^3.1.0",
     "jest": "^24.9.0",
     "lint-staged": "^9.4.2",
     "prettier": "^1.18.2",
@@ -75,5 +75,8 @@
     "react": "^16.11.0",
     "react-dom": "^16.11.0",
     "typescript": "^3.6.4"
+  },
+  "engines": {
+    "node": ">=8.0.0"
   }
 }
