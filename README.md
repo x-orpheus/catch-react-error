@@ -45,8 +45,6 @@ npm install --save-dev @babel/plugin-proposal-class-properties
 ```json
 {
   "plugins": [
-    ... other plugin
-
     ["@babel/plugin-proposal-decorators", { "legacy": true }],
     ["@babel/plugin-proposal-class-properties", { "loose": true }]
   ]
