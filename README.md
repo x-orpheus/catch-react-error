@@ -2,6 +2,10 @@
 
 [![npm](https://img.shields.io/npm/v/catch-react-error?style=flat-square)](https://www.npmjs.com/package/catch-react-error)
 
+[![Build Status](https://travis-ci.org/x-orpheus/catch-react-error.svg?branch=master)](https://travis-ci.org/x-orpheus/catch-react-error)
+
+[![codecov](https://codecov.io/gh/x-orpheus/catch-react-error/branch/master/graph/badge.svg)](https://codecov.io/gh/x-orpheus/catch-react-error)
+
 ## 简介
 对于 React 生命周期中发生的错误，只需要使用 ErrorBoundary 组件包裹可能出现异常的组件即可。
 
