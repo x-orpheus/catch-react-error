@@ -15,4 +15,4 @@ before_script:
 
 script:
   - npm run test
-  - npm run report-coverage
+  - codecov -f coverage/*.json
