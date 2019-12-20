@@ -46,7 +46,7 @@
 
 ### 如何创建一个 ErrorBoundary Component
 
-只要在 `React.Component` 组件里面添加`static getDerivedStateFromError()`或者`componentDidCatch()`即可。前者在错误发生时进行降级处理，后面一个函数主要是做日志记录，<span id = "jump">官方代码</span>如下
+只要在 `React.Component` 组件里面添加 `static getDerivedStateFromError()` 或者 `componentDidCatch()` 即可。前者在错误发生时进行降级处理，后面一个函数主要是做日志记录，[官方代码](https://reactjs.org/docs/error-boundaries.html)如下
 
 ```js
 class ErrorBoundary extends React.Component {
@@ -76,8 +76,8 @@ class ErrorBoundary extends React.Component {
 }
 ```
 
-可以看到`getDerivedStateFromError`捕获了错误，然后设置了`hasError`变量，`render`函数里面根据变量的值返回降级的处理`<h1>Something went wrong.</h1>`。
-至此一个 `ErrorBoundary` 组件已经定义好了，使用时只要包裹一个子组件即可。
+可以看到 `getDerivedStateFromError` 捕获了错误，然后设置了 `hasError` 变量，`render` 函数里面根据变量的值返回降级的处理 `<h1>Something went wrong.</h1>`。
+至此一个 ErrorBoundary 组件已经定义好了，使用时只要包裹一个子组件即可。
 
 ```js
 <ErrorBoundary>
@@ -87,7 +87,7 @@ class ErrorBoundary extends React.Component {
 
 ### ErrorBoundary 的普遍用法。
 
-看到 `ErrorBoundary` 的使用方法之后，大部分团队的用法是写一个`HOC`，然后包装一下,比如下面 `scratch` 的用法
+看到 `ErrorBoundary` 的使用方法之后，大部分团队的用法是写一个 `HOC` ，然后包装一下,比如下面 `scratch` 的用法
 
 ```js
 export default errorBoundaryHOC("Blocks")(
@@ -231,17 +231,17 @@ const visitor = {
 };
 ```
 
-这个方法的思路主要是给现有的代码包裹了配置文件里面的`sentinel.imports`语句。
+这个方法的思路主要是给现有的代码包裹了配置文件里面的 `sentinel.imports` 语句。
 
-只是这个`imports`刚好是一个`errorboundary`，除了这个，也可以注入其他比如 `imports` 是一个`LogComponent`等。
+只是这个 `imports` 刚好是一个 `errorboundary` ，除了这个，也可以注入其他比如 `imports` 是一个 `LogComponent` 等。
 
 完整 github 代码实现[这里](https://github.com/xff1874/react-error-sentinel)
 
-虽然这种方式实现了错误的捕获和兜底方案，但是非常复杂，用起来也麻烦，要配置`webpack`和`.catch-react-error-config.json`还要运行脚手架，效果不令人满意。
+虽然这种方式实现了错误的捕获和兜底方案，但是非常复杂，用起来也麻烦，要配置 `webpack` 和 `.catch-react-error-config.json` 还要运行脚手架，效果不令人满意。
 
 ## 黄金时代-TS Decorator
 
-在上述方案出来之后，很长时间都找不到一个优雅的方案，要么太难用（babelplugin）,要么对于源码的改动太大（hoc）,到底有没有一种方法能够两者结合，直到遇到了 `TS decorator`。
+在上述方案出来之后，很长时间都找不到一个优雅的方案，要么太难用（babelplugin）,要么对于源码的改动太大（HOC）,到底有没有一种方法能够两者结合，直到遇到了 `TS decorator`。
 
 TS 里面提供了类装饰器，方法装饰器，访问器装饰器，属性装饰器，参数装饰器，具体关于装饰器见[官网](https://www.tslang.cn/docs/handbook/decorators.html).
 
@@ -278,6 +278,12 @@ const catchreacterror = (Boundary = DefaultErrorBoundary) => InnerComponent => {
 ```
 
 返回值为一个 HOC，使用`ErrorBoundary`包裹子组件。
+
+`catchreacterror` 本质上是一个柯里化的函数，函数签名为：
+
+```
+catchreacterror :: ErrorBoundary -> Function -> Component
+```
 
 ### 服务端渲染错误捕获
 
