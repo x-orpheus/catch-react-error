@@ -7,8 +7,8 @@ exports["default"] = void 0;
 
 var React = _interopRequireWildcard(require("react"));
 
-var _Errorboundary = _interopRequireDefault(
-  require("./components/Errorboundary")
+var _DefaultErrorBoundary = _interopRequireDefault(
+  require("./components/DefaultErrorBoundary")
 );
 
 var _index = require("./util/index");
@@ -164,7 +164,7 @@ var catchreacterror = function catchreacterror() {
   var Boundary =
     arguments.length > 0 && arguments[0] !== undefined
       ? arguments[0]
-      : _Errorboundary["default"];
+      : _DefaultErrorBoundary["default"];
   return function(InnerComponent) {
     if (
       Boundary &&
@@ -173,14 +173,14 @@ var catchreacterror = function catchreacterror() {
       console.warn(
         "Catch-React-Error: The <ErrorBoundary /> component doesn't extend React.Component.  ErrorBoundary must extends React.Component"
       );
-      Boundary = _Errorboundary["default"];
+      Boundary = _DefaultErrorBoundary["default"];
     }
 
     if (Boundary && !Boundary.prototype.componentDidCatch) {
       console.warn(
         "Catch-React-Error: The <ErrorBoundary /> component doesn't have componentDidCatch lifecycle.  ErrorBoundary must have componentDidCatch lifecycle"
       );
-      Boundary = _Errorboundary["default"];
+      Boundary = _DefaultErrorBoundary["default"];
     }
 
     if ((0, _index.isComponentClass)(InnerComponent)) {

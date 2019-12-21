@@ -194,9 +194,6 @@ var DefaultErrorBoundary =
         {
           key: "render",
           value: function render() {
-            // if (is_server()) {
-            //     return serverMarkup(this.props);
-            // }
             if (this.state.hasError) {
               return React.createElement("div", null, "Something is Wrong");
             }

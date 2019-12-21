@@ -1,22 +1,61 @@
+/* 仅仅是为了，隐藏框架自带的开发环境error overlay */
+iframe {
+  display: none !important;
+}
+
 .App {
-    text-align: center;
+  /* background: rgb(241, 243, 244); */
 }
 
-.App-logo {
-    height: 40vmin;
+.btns {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 30px;
 }
 
-.App-header {
-    background-color: #282c34;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: calc(10px + 2vmin);
-    color: white;
+.btn {
+  width: 100px;
+  height: 30px;
+  border-radius: 75px;
+  background: rgb(241, 243, 244);
+  color: #217ce8;
+  font-size: 16px;
+  /* outline: none; */
+  border: none;
 }
 
-.App-link {
-    color: #09d3ac;
+.btn:active {
+  transform: scale(1.2);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* .btn:hover {
+  background: gainsboro;
+
+} */
+
+h1 {
+  text-align: center;
+  margin: 0;
+  height: 45px;
+}
+
+div {
+  line-height: 45px;
+  font-size: 20px;
+  text-align: center;
+}
+
+.ok-btn {
+  width: 200px;
+}
+
+.ok-desc {
+  line-height: 20px;
+  text-align: left;
+  font-size: 16px;
+}
+
+.ok-content {
+  line-height: 20px;
 }
