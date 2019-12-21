@@ -1,69 +1,51 @@
-import React from "react";
-// import catchreacterror, { DefaultErrorBoundary } from "./dist";
-import catchreacterror, { DefaultErrorBoundary } from "catch-react-error";
+import React, { useState } from "react";
+import catchreacterror, { DefaultErrorBoundary } from "./dist";
+
 import "./index.css";
 
 function App() {
+  const [count, setCount] = useState(0);
+  const [content, setContent] = useState([]);
   return (
     <div className="App">
-      <header className="App-header">
-        <h1>这是正常展示内容</h1>
-      </header>
-      <Test></Test>
-      <SafeContent />
+      <SaleCount count={count} />
+      <section className="btns">
+        <button className="btn" onClick={() => setCount(count => count + 1)}>
+          +
+        </button>
+        <button className="btn" onClick={() => setCount(count => count - 1)}>
+          -
+        </button>
+      </section>
+      <hr />
+      <section>
+        <p className="ok-desc">
+          Although the Count Component was crashed, but this part was not
+          affected
+        </p>
+        <button
+          className="btn ok-btn"
+          onClick={() => {
+            setContent(content => ["clicked!", ...content]);
+          }}
+        >
+          I'm OK, click me !
+        </button>
+        {content.map(x => (
+          <p className="ok-content">{x}</p>
+        ))}
+      </section>
     </div>
   );
 }
 
-class Test extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      foo: 1
-    };
-    this.buttonRef = React.createRef();
+function Count({ count }) {
+  if (count === 3) {
+    throw new Error("count is three");
   }
-
-  render() {
-    const { foo } = this.state;
-    console.log(foo);
-    return (
-      <div>
-        <Foo test="foo" />
-        <Button text="click me" ref={this.buttonRef} />
-        <Label list={["a", "abc", null, "abcd"]} />
-      </div>
-    );
-  }
-
-  componentDidMount() {
-    console.log(this.buttonRef.current);
-  }
-}
-@catchreacterror()
-class Button extends React.Component {
-  click() {
-    console.log("button click");
-  }
-  render() {
-    const emptyObj = {};
-    console.log(emptyObj.a.b);
-    return <button onClick={this.click}>click me</button>;
-  }
+  return <h1>{count}</h1>;
 }
 
-const Label = ({ list }, b, c) => {
-  return list.map(x => <SafeContent x={x} kye={x} />);
-};
-
-const Content = (props, b, c) => {
-  return <div>{props.x.length}</div>;
-};
-
-const SafeContent = catchreacterror(DefaultErrorBoundary)(Content);
-
-const Foo = (a, b, c) => {
-  return <p>Foo</p>;
-};
+const SaleCount = catchreacterror()(Count);
 
 export default App;

@@ -12,7 +12,11 @@
 
 catch-react-error 正是来解决这个问题的，catch-react-error 在客户端渲染的时候正常使用`ErrorBoundary` 包裹组件；在服务端渲染的时候，使用 try-catch 包裹 render 函数, 这样则可以在同构应用中完美的处理 React 生命周期中发生的错误
 
-## example
+## Demo
+
+<div style="text-align:center" align="center">
+  <img src="https://p1.music.126.net/6tHW45dHH_qKtCw0rrkJOg==/109951164571395030.gif" />
+</div>
 
 ### client side render
 

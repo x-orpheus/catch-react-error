@@ -2,3 +2,60 @@
 iframe {
   display: none !important;
 }
+
+.App {
+  /* background: rgb(241, 243, 244); */
+}
+
+.btns {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 30px;
+}
+
+.btn {
+  width: 100px;
+  height: 30px;
+  border-radius: 75px;
+  background: rgb(241, 243, 244);
+  color: #217ce8;
+  font-size: 16px;
+  /* outline: none; */
+  border: none;
+}
+
+.btn:active {
+  transform: scale(1.2);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* .btn:hover {
+  background: gainsboro;
+
+} */
+
+h1 {
+  text-align: center;
+  margin: 0;
+  height: 45px;
+}
+
+div {
+  line-height: 45px;
+  font-size: 20px;
+  text-align: center;
+}
+
+.ok-btn {
+  width: 200px;
+}
+
+.ok-desc {
+  line-height: 20px;
+  text-align: left;
+  font-size: 16px;
+}
+
+.ok-content {
+  line-height: 20px;
+}
