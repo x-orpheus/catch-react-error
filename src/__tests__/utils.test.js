@@ -6,7 +6,6 @@ import { DefaultErrorBoundary } from "../../dist";
 import { is_server, isComponentClass } from "../../dist/util";
 import Enzyme, { shallow, mount } from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
-import { func } from "prop-types";
 
 Enzyme.configure({ adapter: new Adapter() });
 

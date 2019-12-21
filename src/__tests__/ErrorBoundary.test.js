@@ -1,9 +1,8 @@
 import React from "react";
-import { renderToStaticMarkup } from "react-dom/server";
 import Enzyme, { shallow, mount } from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
 
-import { DefaultErrorBoundary, serverMarkup } from "../../dist";
+import { DefaultErrorBoundary } from "../../dist";
 import { is_server } from "../../dist/util";
 
 Enzyme.configure({ adapter: new Adapter() });
