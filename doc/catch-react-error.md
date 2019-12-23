@@ -1,15 +1,15 @@
 # catch-react-error
 
-> 此项目为云音乐营收组稳定性工程的前端部分，参与者[章伟东](https://github.com/xff1874)和[赵祥涛](https://sylvenas.github.io/)
+> 此项目为[网易云音乐](https://music.163.com/)营收组稳定性工程的前端部分，参与者[章伟东](https://github.com/xff1874)和[赵祥涛](https://sylvenas.github.io/)
 
 ## 一个 bug 引发的血案
 
 韩国某著名男子天团之前在我们平台上架了一张重磅的数字专辑，本来是一件喜大普奔的好事，结果上架后投诉蜂拥而至。部分用户反馈页面打开就奔溃，紧急排查了之后发现就是一行代码导致，下面就是这段 jsx 代码。
 
-```js
+```jsx {8}
   render() {
-     const { data, isCreator, canSignOut, canSignIn } = this.props;
-     const {  supportCard, creator, fansList, visitorId, memberCount } = data;
+     const { data } = this.props;
+     const { creator } = data;
      let getUserIcon = (obj) => {
          if (obj.userType == 4) {
              return (<i className="icn u-svg u-svg-yyr_sml" />);
@@ -33,11 +33,11 @@
 
 ## ErrorBoundary
 
-从 React 16 开始,引入了 ErrorBoundary 组件，它可以捕获它的**子组件**中产生的错误，记录错误日志，并展示降级内容,具体[官网地址](https://reactjs.org/docs/error-boundaries.html)。
+从 React 16 开始,引入了 `ErrorBoundary` 组件，它可以捕获它的**子组件**中产生的错误，记录错误日志，并展示降级内容,具体[官网地址](https://reactjs.org/docs/error-boundaries.html)。
 
-> Error boundaries are React components that **catch JavaScript errors anywhere in their child component tree, log those errors, and display a fallback UI** instead of the component tree that crashed
+> Error boundaries are React components that **catch JavaScript errors anywhere in their child component tree, log those errors, and display a fallback UI** instead of the component tree that crashed.
 
-这个特性让我们眼前一亮，精神为之振奋，仿佛在黑暗中看到了一丝亮光。但是经过研究发现，Error Boundary 只能捕获子组件的 render 错误，有一定的局限性，以下的错误是无法处理的:
+这个特性让我们眼前一亮，精神为之振奋，仿佛在黑暗中看到了一丝亮光。但是经过研究发现，`Error Boundary` 只能捕获子组件的 `render` 错误，有一定的局限性，以下的错误是无法处理的:
 
 - [事件处理函数](https://github.com/facebook/react/issues/11409)(比如 onClick,onMouseEnter)
 - [异步代码](https://github.com/facebook/react/issues/11334)(如 requestAnimationFrame，setTimeout,promise)
@@ -46,9 +46,9 @@
 
 ### 如何创建一个 ErrorBoundary Component
 
-只要在 `React.Component` 组件里面添加 `static getDerivedStateFromError()` 或者 `componentDidCatch()` 即可。前者在错误发生时进行降级处理，后面一个函数主要是做日志记录，[官方代码](https://reactjs.org/docs/error-boundaries.html)如下
+只要在 `React.Component` 组件里面添加 `static getDerivedStateFromError()` 或者 `componentDidCatch()` 即可。前者在错误发生时进行降级处理，后面一个函数主要是做日志记录，[官方代码](https://reactjs.org/docs/error-boundaries.html)如下:
 
-```js
+```jsx
 class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
@@ -77,7 +77,7 @@ class ErrorBoundary extends React.Component {
 ```
 
 可以看到 `getDerivedStateFromError` 捕获了错误，然后设置了 `hasError` 变量，`render` 函数里面根据变量的值返回降级的处理 `<h1>Something went wrong.</h1>`。
-至此一个 ErrorBoundary 组件已经定义好了，使用时只要包裹一个子组件即可。
+至此一个 ErrorBoundary 组件已经定义好了，使用时只要包裹一个子组件即可:
 
 ```js
 <ErrorBoundary>
@@ -145,7 +145,7 @@ export * as name1 from …
 }
 ```
 
-patch 前源代码
+**patch 前源代码**
 
 ```js
 import React, { Component } from "react";
@@ -157,7 +157,7 @@ class App extends Component {
 }
 ```
 
-读取配置文件 patch 之后的代码为
+**读取配置文件 patch 之后的代码为**:
 
 ```js
 //isCatchReactError
@@ -233,7 +233,7 @@ const visitor = {
 
 这个方法的思路主要是给现有的代码包裹了配置文件里面的 `sentinel.imports` 语句。
 
-只是这个 `imports` 刚好是一个 `errorboundary` ，除了这个，也可以注入其他比如 `imports` 是一个 `LogComponent` 等。
+只是这个 `imports` 刚好是一个 `Errorboundary` ，除了这个，也可以注入其他比如 `imports` 是一个 `LogComponent` 等。
 
 完整 github 代码实现[这里](https://github.com/xff1874/react-error-sentinel)
 
@@ -245,13 +245,17 @@ const visitor = {
 
 TS 里面提供了类装饰器，方法装饰器，访问器装饰器，属性装饰器，参数装饰器，具体关于装饰器见[官网](https://www.tslang.cn/docs/handbook/decorators.html).
 
-我们使用了类装饰器，错误捕获设计如下
+我们使用了类装饰器，错误捕获设计如下：
 
 ```jsx
 @catchreacterror()
-class Test extends React.Component {
+class Count extends React.Component {
   render() {
-    return <Button text="click me" />;
+    const { count } = this.props;
+    if (count === 3) {
+      throw new Error("count is three");
+    }
+    return <h1>{count}</h1>;
   }
 }
 ```
@@ -277,7 +281,7 @@ const catchreacterror = (Boundary = DefaultErrorBoundary) => InnerComponent => {
 };
 ```
 
-返回值为一个 HOC，使用`ErrorBoundary`包裹子组件。
+返回值为一个 High-Order-Function，使用`ErrorBoundary`包裹子组件。
 
 `catchreacterror` 本质上是一个柯里化的函数，函数签名为：
 
@@ -316,13 +320,15 @@ if (is_server()) {
 
 ### catch-react-error 使用方式
 
-#### 1.安装 catch-react-error
+### 1.安装 catch-react-error
 
 ```sh
-nenpm install catch-react-error
+npm  install catch-react-error --save
 ```
 
-#### 2.安装 ES7 Decorator babel plugin
+### 2.安装 ES7 Decorator babel plugin
+
+我们采用 ES7 的 `Decorator` 语法来让代码更简洁，当然也可以采用函数式的写法
 
 ```sh
 npm install --save-dev @babel/plugin-proposal-decorators
@@ -341,53 +347,97 @@ npm install --save-dev @babel/plugin-proposal-class-properties
 }
 ```
 
-#### 3.导入 catch-react-error
+### 3.导入 catch-react-error
 
 ```jsx
 import catchreacterror from "catch-react-error";
 ```
 
-#### 4.使用@catchreacterror decorator
+### 4.使用@catchreacterror decorator
 
 ```jsx
 @catchreacterror()
-class Test extends React.Component {
+class Count extends React.Component {
   render() {
-    return <Button text="click me" />;
+    const { count } = this.props;
+    if (count === 3) {
+      throw new Error("count is three");
+    }
+    return <h1>{count}</h1>;
   }
 }
 ```
 
-`catchreacterror`函数接受一个参数:ErrorBoundary(不提供则默认采用`DefaultErrorBoundary`)
+`catchreacterror` 本质上是一个柯里化的函数，函数签名为：
 
-自定义的`CustomErrorBoundary`组件。默认会用框架提供的`DefaultErrorBoundary`组件。其原理为：客户端渲染会用 React 16 的[Error Boundary](https://reactjs.org/blog/2017/07/26/error-handling-in-react-16.html)的相关函数来处理错误，服务端用`try catch`来捕获 render 的错误。
+```
+catchreacterror :: ErrorBoundary -> Function -> Component
+```
 
-#### 5.使用@catchreacterror 处理 FunctionComponent
+`catchreacterror` 函数接受一个参数: ErrorBoundary (默认采用`DefaultErrorBoundary`),返回一个 High-Order-Function。
 
-上面是对于`ClassComponent`做的处理，但是有些人喜欢用函数组件，这里也提供使用方法,如下。
+其原理为：客户端渲染会用 React 16 的[Error Boundary](https://reactjs.org/blog/2017/07/26/error-handling-in-react-16.html)的相关函数来处理错误，服务端用`try catch`来捕获 render 的错误。
+
+### 5.使用@catchreacterror 处理 FunctionComponent
+
+上面是对于 `ClassComponent` 做的处理，但是有些人喜欢用函数组件，这里也提供使用方法,如下。
 
 ```js
-const Content = (props, b, c) => {
-  return <div>{props.x.length}</div>;
-};
+// 如果没有使用 catchreacterror 包裹 Content 组件，
+// 则在 count 为 3 的情况下则必然报错，导致程序崩溃
+function Count({ count }) {
+  if (count === 3) {
+    throw new Error("count is three");
+  }
+  return <h1>{count}</h1>;
+}
 
-const SafeContent = catchreacterror(DefaultErrorBoundary)(Content);
+// 被 catchreacterror 包裹之后会 catch 住错误，
+// 仅仅导致当前组件被销毁，其他内容正常展示
+const SaleCount = catchreacterror()(Count);
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <h1>这是正常展示内容</h1>
-      </header>
-      <SafeContent/>
+            
+      <SaleCount count={3} />
+      <button>I'm OK, click me !</button>
+    </div>
   );
 }
-
-
 ```
 
-#### 6.如何创建自己所需的`Custom ErrorBoundary`
+### 6.如何编写 CustomErrorBoundary
 
-参考上面 [如何创建一个 ErrorBoundary Component](#jump),然后改为自己所需即可
+拷贝下面 React 提供的事例，可以添加日志，自定义 fallback 内容
+
+```js
+class CustomErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error) {
+    // Update state so the next render will show the fallback UI.
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    // You can also log the error to an error reporting service
+    logErrorToMyService(error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      // You can render any custom fallback UI
+      return <h1>Something went wrong.</h1>;
+    }
+  }
+
+    return this.props.children;
+  }
+}
+```
 
 完整的 github 代码在此[catch-react-error](https://github.com/x-orpheus/catch-react-error)
