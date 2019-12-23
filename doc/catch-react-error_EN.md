@@ -120,7 +120,9 @@ Therefore, we are considering whether there is a way to deal with the above prob
 
 After encountering the above `HOC` problem, we focused on whether we can wrap an `ErrorBoundary` component directly in the subcomponent. The flow diagram is as follows:
 
-<img src ="https://p1.music.126.net/CmbPWqDH3xZ198OFWb6JBQ==/109951164546488873.png" height="200" width="100%">
+<div style="text-align:center" align="center">
+  <img src ="https://p1.music.126.net/CmbPWqDH3xZ198OFWb6JBQ==/109951164546488873.png" height="400">
+</div>
 
 The simple idea is as follows:
 

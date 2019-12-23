@@ -119,7 +119,9 @@ export * as name1 from …
 
 在碰到上面 `HOC` 的问题之后，我们把目光锁定在能否直接在子组件包裹一个 `ErrorBoundary` 组件，流程示意图如下：
 
-<img src ="https://p1.music.126.net/CmbPWqDH3xZ198OFWb6JBQ==/109951164546488873.png" height="200" width="100%">
+<div style="text-align:center" align="center">
+  <img src ="https://p1.music.126.net/CmbPWqDH3xZ198OFWb6JBQ==/109951164546488873.png" height="400">
+</div>
 
 简单思路如下：
 
