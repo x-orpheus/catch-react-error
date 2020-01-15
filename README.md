@@ -35,6 +35,7 @@ we provide some demo, so you can understand the library more clearly
 
 ```sh
 cd example-client
+npm install
 npm run dev
 ```
 
@@ -42,6 +43,7 @@ npm run dev
 
 ```sh
 cd example-server
+npm install
 npm run dev
 ```
 
