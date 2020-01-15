@@ -166,19 +166,25 @@ var catchreacterror = function catchreacterror() {
       ? arguments[0]
       : _DefaultErrorBoundary["default"];
   return function(InnerComponent) {
-    if (
-      Boundary &&
-      !React.Component.prototype.isPrototypeOf(Boundary.prototype)
-    ) {
+    if (Boundary && !Boundary.prototype.isReactComponent) {
       console.warn(
-        "Catch-React-Error: The <ErrorBoundary /> component doesn't extend React.Component.  ErrorBoundary must extends React.Component"
+        "The ".concat(Boundary, " component is not a react component")
       );
       Boundary = _DefaultErrorBoundary["default"];
     }
 
-    if (Boundary && !Boundary.prototype.componentDidCatch) {
+    if (
+      Boundary &&
+      !(
+        Boundary.prototype.componentDidCatch ||
+        Boundary.prototype.getDerivedStateFromError
+      )
+    ) {
       console.warn(
-        "Catch-React-Error: The <ErrorBoundary /> component doesn't have componentDidCatch lifecycle.  ErrorBoundary must have componentDidCatch lifecycle"
+        "".concat(
+          Boundary,
+          " doesn't has componentDidCatch or getDerivedStateFromError"
+        )
       );
       Boundary = _DefaultErrorBoundary["default"];
     }

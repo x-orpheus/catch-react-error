@@ -1,7 +1,7 @@
 {
   "name": "catch-react-error",
-  "version": "2.1.2",
-  "description": "使用ES7的Decorator配合React ErrorBoundary捕获React生命周期期间发生的错误",
+  "version": "2.1.4",
+  "description": "A framework combines React Error Boundaries and decorator to protect react source code easily",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "scripts": {
@@ -20,7 +20,7 @@
   "author": "zwd",
   "contributors": [
     "zwd <zwd321081@gmail.com>",
-    "zxt <hzzhaoxiangtao@corp.netease.com>"
+    "zxt <sylvenas@outlook.com>"
   ],
   "license": "ISC",
   "husky": {

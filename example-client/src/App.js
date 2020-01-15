@@ -1,14 +1,43 @@
 import React, { useState } from "react";
-import catchreacterror, { DefaultErrorBoundary } from "./dist";
+import catchreacterror, { DefaultErrorBoundary } from "catch-react-error";
+import CustomErrorBoundary from "./custom";
 
 import "./App.css";
+
+@catchreacterror()
+class Count extends React.Component {
+  render() {
+    const { count } = this.props;
+    if (count === 3) {
+      throw new Error("count is three");
+    }
+    return <h1>{count}</h1>;
+  }
+}
+
+@catchreacterror(CustomErrorBoundary)
+class CustomCount extends React.Component {
+  render() {
+    const { count } = this.props;
+    if (count === 3) {
+      throw new Error("count is three");
+    }
+    return <h1>{count}</h1>;
+  }
+}
+
+function fnCount({ count }) {
+  if (count === 3) {
+    throw new Error("count is three");
+  }
+  return <h1>{count}</h1>;
+}
 
 function App() {
   const [count, setCount] = useState(0);
   const [content, setContent] = useState([]);
   return (
     <div className="App">
-      <SaleCount count={count} />
       <section className="btns">
         <button className="btn" onClick={() => setCount(count => count + 1)}>
           +
@@ -19,33 +48,18 @@ function App() {
       </section>
       <hr />
       <section>
-        <p className="ok-desc">
-          Although the Count Component was crashed, but this part was not
-          affected
-        </p>
-        <button
-          className="btn ok-btn"
-          onClick={() => {
-            setContent(content => ["clicked!", ...content]);
-          }}
-        >
-          I'm OK, click me !
-        </button>
-        {content.map(x => (
-          <p className="ok-content">{x}</p>
-        ))}
+        <Count count={count} />
       </section>
+      <div>
+        <CustomCount count={count} />
+      </div>
+      <div>
+        Function componnet: <SafeCount count={count} />
+      </div>
     </div>
   );
 }
 
-function Count({ count }) {
-  if (count === 3) {
-    throw new Error("count is three");
-  }
-  return <h1>{count}</h1>;
-}
-
-const SaleCount = catchreacterror()(Count);
+const SafeCount = catchreacterror()(fnCount);
 
 export default App;
