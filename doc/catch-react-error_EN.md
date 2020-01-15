@@ -1,3 +1,5 @@
+<img src="https://p1.music.126.net/yQQYPREBOFr9d_1MQJfLiQ==/109951164622691316.png">
+
 # catch-react-error
 
 > The participants of project are [Zhang Weidong](https://github.com/xff1874) and [Zhao Xiangtao](https://sylvenas.github.io/)
@@ -281,7 +283,8 @@ const catchreacterror = (Boundary = DefaultErrorBoundary) => InnerComponent => {
       return (
         <Boundary>
              
-          <InnerComponent {...this.props} ref={forwardedRef} /> 
+          <InnerComponent {...this.props} ref={forwardedRef} />
+           
         </Boundary>
       );
     }
