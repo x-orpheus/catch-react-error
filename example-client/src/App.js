@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import catchreacterror, { DefaultErrorBoundary } from "../../dist";
+import catchreacterror, { DefaultErrorBoundary } from "catch-react-error";
 import CustomErrorBoundary from "./custom";
 
-import "./index.css";
+import "./App.css";
 
 @catchreacterror()
 class Count extends React.Component {
