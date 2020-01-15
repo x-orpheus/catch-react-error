@@ -1,5 +1,5 @@
-import * as React from "react";
-export class CustomErrorBoundary extends React.Component {
+import React, { Component } from "react";
+export class CustomErrorBoundary extends Component {
   state = {
     hasError: false
   };

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import catchreacterror, { DefaultErrorBoundary } from "../dist";
+import catchreacterror, { DefaultErrorBoundary } from "../../dist";
 import CustomErrorBoundary from "./custom";
 
 import "./index.css";

@@ -8,12 +8,12 @@ const catchreacterror =
     (Boundary: ComponentClass<ErrorBoundaryProps, ErrorBoundaryState> = DefaultErrorBoundary) =>
         (InnerComponent: ComponentClass | FunctionComponent) => {
 
-            if (Boundary && !Component.prototype.isPrototypeOf(Boundary.prototype)) {
-                console.warn("Catch-React-Error: The <ErrorBoundary /> component doesn't extend React.Component.  ErrorBoundary must extends React.Component");
+            if (Boundary && !Boundary.prototype.isReactComponent) {
+                console.warn(`The ${Boundary} component is not a react component`);
                 Boundary = DefaultErrorBoundary
             }
-            if (Boundary && !Boundary.prototype.componentDidCatch) {
-                console.warn("Catch-React-Error: The <ErrorBoundary /> component doesn't have componentDidCatch lifecycle.  ErrorBoundary must have componentDidCatch lifecycle");
+            if (Boundary && !(Boundary.prototype.componentDidCatch || Boundary.prototype.getDerivedStateFromError)) {
+                console.warn(`${Boundary} doesn't has componentDidCatch or getDerivedStateFromError`);
                 Boundary = DefaultErrorBoundary
             }
 
