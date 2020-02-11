@@ -140,8 +140,6 @@ class CustomErrorBoundary extends React.Component {
     if (this.state.hasError) {
       return <h1> Something with my app,fallback ui. </ h1>;
     }
-  }
-
     return this.props.children;
   }
 }
