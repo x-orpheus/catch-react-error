@@ -1,6 +1,6 @@
 {
   "name": "catch-react-error",
-  "version": "2.1.4",
+  "version": "2.1.5",
   "description": "A framework combines React Error Boundaries and decorator to protect react source code easily",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",

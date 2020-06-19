@@ -58,8 +58,8 @@ npm install catch-react-error --save
 ### 2. Install ES7 Decorator babel plugin
 
 ```sh
-npm install --save-dev @ babel / plugin-proposal-decorators
-npm install --save-dev @ babel / plugin-proposal-class-properties
+npm install --save-dev @babel/plugin-proposal-decorators
+npm install --save-dev @babel/plugin-proposal-class-properties
 ```
 
 babel plugin configuration
@@ -67,8 +67,8 @@ babel plugin configuration
 ```json
 {
   "plugins": [
-    ["@ babel / plugin-proposal-decorators", { "legacy": true }],
-    ["@ babel / plugin-proposal-class-properties", { "loose": true }]
+    ["@babel/plugin-proposal-decorators", { "legacy": true }],
+    ["@babel/plugin-proposal-class-properties", { "loose": true }]
   ]
 }
 ```
