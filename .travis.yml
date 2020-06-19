@@ -1,0 +1,18 @@
+language: node_js
+
+node_js:
+  - "8"
+  - "10"
+  - "12"
+
+  cache: npm
+
+install:
+  - npm install
+
+before_script:
+  - npm run build
+
+script:
+  - npm run test
+  - codecov -f coverage/*.json

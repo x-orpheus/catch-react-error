@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist/",
+    "sourceMap": true,
+    "noImplicitAny": true,
+    "noEmit": true,
+    "experimentalDecorators": true,
+    "declaration": true,
+    "module": "es2015",
+    "target": "es5",
+    "jsx": "react"
+  },
+  "include": ["src"],
+  "exclude": ["example-client"]
+}

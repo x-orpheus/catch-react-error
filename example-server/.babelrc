@@ -1,0 +1,40 @@
+{
+    "presets": [
+        [
+            "next/babel",
+            {
+                "transform-runtime": {
+                    "useESModules": false
+                }
+            }
+        ]
+    ],
+    "env": {
+        "test": {
+            "plugins": [
+                "rewire"
+            ]
+        },
+        "test-cov": {
+            "plugins": [
+                "istanbul",
+                "rewire"
+            ]
+        }
+    },
+    "plugins": [
+        "transform-function-bind",
+        [
+            "@babel/plugin-proposal-decorators",
+            {
+                "legacy": true
+            }
+        ],
+        [
+            "@babel/plugin-proposal-class-properties",
+            {
+                "loose": true
+            }
+        ]
+    ]
+}
