@@ -21,7 +21,7 @@ export class DefaultErrorBoundary extends React.Component<ErrorBoundaryProps, Er
     render() {
 
         if (this.state.hasError) {
-            return <div>Something is Wrong</div>
+            return null
         }
 
         return this.props.children;
