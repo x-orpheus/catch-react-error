@@ -34,7 +34,7 @@ const catchreacterror =
                             return originalRender.apply(this, arguments);
                         } catch (error) {
                             console.error(error)
-                            return <div>Something is Wrong</div>
+                            return null
                         }
                     }
                 }
@@ -66,7 +66,7 @@ const catchreacterror =
                             return originalFun.apply(null, arguments);
                         } catch (error) {
                             console.error(error)
-                            return <div>Something is Wrong</div>
+                            return null
                         }
                     }
                 }
