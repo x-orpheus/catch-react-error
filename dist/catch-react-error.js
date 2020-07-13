@@ -198,7 +198,7 @@ var catchreacterror = function catchreacterror() {
             return originalRender.apply(this, arguments);
           } catch (error) {
             console.error(error);
-            return React.createElement("div", null, "Something is Wrong");
+            return null;
           }
         };
       }
@@ -261,7 +261,7 @@ var catchreacterror = function catchreacterror() {
             return originalFun.apply(null, arguments);
           } catch (error) {
             console.error(error);
-            return React.createElement("div", null, "Something is Wrong");
+            return null;
           }
         };
       }
