@@ -108,14 +108,6 @@ function Count({ count }) {
 
 const SaleCount = catchreacterror()(Count);
 
-function App() {
-  return (
-    <section className="App">
-      <SaleCount count={3} />
-      <button>I'm OK, click me !</button>
-    </section>
-  );
-}
 
 ```
 
