@@ -10,14 +10,16 @@ English | [简体中文](./doc/catch-react-error.md)
 
 ## Introduction
 
+This package supports both `React` And `React Native`.
+
 This project make it easy to protect your react source code。
 
 We combine decorators and React Error Boundaries together.
 
 The React Error Boundaries don't support the Server Side Rendering，so we use `try/catch` to deal such condition.
 
-The catch-react-error takes only one argument,[React Error Boundary Component](https://reactjs.org/docs/error-boundaries.html).
-We provide DefaultErrorBoundary as the default argument.
+The catch-react-error takes only one argument,[React Error Boundary Component](https://reactjs.org/docs/error-boundaries.html) which 
+we provide DefaultErrorBoundary as the default one.
 
 ```js
 const catchreacterror = (Boundary = DefaultErrorBoundary) => {};
@@ -108,17 +110,18 @@ const SaleCount = catchreacterror()(Count);
 
 function App() {
   return (
-    <div className="App">
+    <section className="App">
       <SaleCount count={3} />
       <button>I'm OK, click me !</button>
-    </div>
+    </section>
   );
 }
+
 ```
 
-### 6. How to write a CustomErrorBoundary
+### 6. Add a  CustomErrorBoundary component
 
-1. create an normal Error Boundary Component
+* First, create an normal Error Boundary Component and change it
 
 ```jsx
 class CustomErrorBoundary extends React.Component {
@@ -133,7 +136,7 @@ class CustomErrorBoundary extends React.Component {
 
   componentDidCatch (error, errorInfo) {
       //do something as needed
-    logErrorToMyService (error, errorInfo);
+    reportToMyLogService (error, errorInfo);
   }
 
   render () {
@@ -148,7 +151,7 @@ class CustomErrorBoundary extends React.Component {
 
 ```
 
-2. pass it as the argument
+* Second, pass it as the argument
 
 ```jsx
 @catchreacterror(CustomErrorBoundary)
