@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { Component, ComponentClass, FunctionComponent, forwardRef, Ref, ReactNode } from 'react';
+import { Component, ComponentClass, FunctionComponent, MemoExoticComponent, ComponentType, forwardRef, Ref, ReactNode } from 'react';
 import DefaultErrorBoundary from './components/DefaultErrorBoundary'
 import { ErrorBoundaryProps, ErrorBoundaryState } from './interface/propsInterface'
-import { is_server, isComponentClass } from './util/index';
+import { is_server, isComponentClass, isReactMemo } from './util/index';
 
 const catchreacterror =
     (Boundary: ComponentClass<ErrorBoundaryProps, ErrorBoundaryState> = DefaultErrorBoundary) =>
@@ -15,6 +15,16 @@ const catchreacterror =
             if (Boundary && !(Boundary.prototype.componentDidCatch || Boundary.prototype.getDerivedStateFromError)) {
                 console.warn(`${Boundary} doesn't has componentDidCatch or getDerivedStateFromError`);
                 Boundary = DefaultErrorBoundary
+            }
+
+            // 将React.memo包裹过的组件转换成普通函数式组件
+            if (!isComponentClass(InnerComponent) && isReactMemo(InnerComponent)) {
+                const NewComponent: MemoExoticComponent<ComponentType<any>> = InnerComponent;
+                InnerComponent = function (props: {
+                    children?: ReactNode;
+                }) {
+                    return <NewComponent {...props} />
+                }
             }
 
             if (isComponentClass(InnerComponent)) {
