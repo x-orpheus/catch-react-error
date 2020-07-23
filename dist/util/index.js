@@ -5,6 +5,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.is_server = is_server;
 exports.isComponentClass = isComponentClass;
+exports.isReactMemo = isReactMemo;
 exports["default"] = void 0;
 
 function is_server() {
@@ -22,6 +23,10 @@ function is_server() {
 
 function isComponentClass(Component) {
   return Component.prototype && Component.prototype.render;
+}
+
+function isReactMemo(Component) {
+  return typeof Component !== "function" && !!Component["$$typeof"];
 }
 
 var _default = {

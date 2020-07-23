@@ -187,6 +187,17 @@ var catchreacterror = function catchreacterror() {
         )
       );
       Boundary = _DefaultErrorBoundary["default"];
+    } // 将React.memo包裹过的组件转换成普通函数式组件
+
+    if (
+      !(0, _index.isComponentClass)(InnerComponent) &&
+      (0, _index.isReactMemo)(InnerComponent)
+    ) {
+      var NewComponent = InnerComponent;
+
+      InnerComponent = function InnerComponent(props) {
+        return React.createElement(NewComponent, props);
+      };
     }
 
     if ((0, _index.isComponentClass)(InnerComponent)) {
