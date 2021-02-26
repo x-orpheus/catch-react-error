@@ -156,6 +156,10 @@ or
 const SaleCount = catchreacterror(CustomErrorBoundary)(Count);
 ```
 
+## TODO
+- curried function
+- log to sentry 
+
 ## License
 
 MIT.
