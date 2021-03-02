@@ -114,7 +114,9 @@ const SaleCount = catchreacterror(Count);
 
 ### 6. Add a CustomErrorBoundary component
 
-- First, create an normal Error Boundary Component and change it
+- First, create an normal Error Boundary Component and change it.
+
+  **custom Errorboundary must has a static property: `catchreacterror:true`**
 
 ```jsx
 class CustomErrorBoundary extends React.Component {
@@ -122,6 +124,8 @@ class CustomErrorBoundary extends React.Component {
     super (props);
     this.state = {hasError: false};
   }
+
+  static catchreacterror: true
 
   static getDerivedStateFromError (error) {
     return {hasError: true};
