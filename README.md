@@ -4,7 +4,9 @@
 [![Build Status](https://travis-ci.org/x-orpheus/catch-react-error.svg?branch=master)](https://travis-ci.org/x-orpheus/catch-react-error)
 [![codecov](https://img.shields.io/codecov/c/gh/x-orpheus/catch-react-error?style=flat-square&logo=codecov)](https://codecov.io/gh/x-orpheus/catch-react-error)
 
-English | [简体中文](./doc/catch-react-error.md)
+English | [简体中文](./README-zh_CN.md)
+
+[DOC V3](./README-V3.md)
 
 [Why we create catch-react-error](./doc/catch-react-error_EN.md)
 
@@ -125,6 +127,7 @@ class CustomErrorBoundary extends React.Component {
     this.state = {hasError: false};
   }
 
+  // This is the mark point that distinguishes ErrorBoundary Component and custom Component
   static catchreacterror = true
 
   static getDerivedStateFromError (error) {
