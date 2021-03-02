@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import catchreacterror, { DefaultErrorBoundary } from "catch-react-error";
+import catchreacterror, { DefaultErrorBoundary } from "./dist/index";
 import CustomErrorBoundary from "./custom";
 
 import "./App.css";
 
-@catchreacterror()
+@catchreacterror
 class Count extends React.Component {
   render() {
     const { count } = this.props;
@@ -33,9 +33,11 @@ function fnCount({ count }) {
   return <h1>{count}</h1>;
 }
 
+const SafeCount = catchreacterror(CustomErrorBoundary, fnCount);
+const SafeCount2 = catchreacterror(fnCount);
+
 function App() {
   const [count, setCount] = useState(0);
-  const [content, setContent] = useState([]);
   return (
     <div className="App">
       <section className="btns">
@@ -56,10 +58,11 @@ function App() {
       <div>
         Function componnet: <SafeCount count={count} />
       </div>
+      <div>
+        Function componnet2: <SafeCount2 count={count} />
+      </div>
     </div>
   );
 }
-
-const SafeCount = catchreacterror()(fnCount);
 
 export default App;

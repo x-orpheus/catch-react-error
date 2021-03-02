@@ -84,7 +84,7 @@ import catchreacterror from "catch-react-error";
 ### 4. Use @catchreacterror on class component
 
 ```jsx
-@catchreacterror
+@catchreacterror()
 class Count extends React.Component {
   render() {
     const { count } = this.props;
@@ -106,7 +106,7 @@ function Count({ count }) {
   return <h1>{count}</h1>;
 }
 
-const SaleCount = catchreacterror(Count);
+const SaleCount = catchreacterror()(Count);
 ```
 
 ### 6. Add a CustomErrorBoundary component
@@ -151,7 +151,7 @@ class Count extends React.Component {}
 or
 
 ```jsx
-const SaleCount = catchreacterror(CustomErrorBoundary, Count);
+const SaleCount = catchreacterror(CustomErrorBoundary)(Count);
 ```
 
 ## TODO

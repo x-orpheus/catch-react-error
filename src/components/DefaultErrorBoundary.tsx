@@ -7,6 +7,8 @@ export class DefaultErrorBoundary extends React.Component<ErrorBoundaryProps, Er
         hasError: false,
     };
 
+    static catchreacterror = true;
+
     static getDerivedStateFromError(err: Error) {
         return {
             hasError: true,
