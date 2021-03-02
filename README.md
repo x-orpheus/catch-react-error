@@ -125,7 +125,7 @@ class CustomErrorBoundary extends React.Component {
     this.state = {hasError: false};
   }
 
-  static catchreacterror: true
+  static catchreacterror = true
 
   static getDerivedStateFromError (error) {
     return {hasError: true};
