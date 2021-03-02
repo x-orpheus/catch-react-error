@@ -22,7 +22,10 @@ The catch-react-error takes only one argument,[React Error Boundary Component](h
 we provide DefaultErrorBoundary as the default one.
 
 ```js
-const catchreacterror = (Boundary = DefaultErrorBoundary) => {};
+const catchreacterror = (
+  Boundary: ErrorBoundary,
+  SomeComponent: ComponentClass | FunctionComponent
+) => {};
 ```
 
 <div style="text-align:center" align="center">
