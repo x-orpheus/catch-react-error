@@ -3,6 +3,7 @@ export class CustomErrorBoundary extends Component {
   state = {
     hasError: false
   };
+  static catchreacterror = true;
   static getDerivedStateFromError(err) {
     return {
       hasError: true,
